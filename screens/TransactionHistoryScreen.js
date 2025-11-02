@@ -9,7 +9,23 @@ import {
 import { useAppContext } from '../context/AppContext';
 
 const TransactionHistoryScreen = ({ navigation }) => {
-  const { transactions } = useAppContext();
+  const { user, getUserTransactions, findUserById } = useAppContext();
+
+  const transactions = getUserTransactions(user?.id || '').map(txn => {
+    const isSent = txn.senderId === user?.id;
+    const otherUserId = isSent ? txn.recipientId : txn.senderId;
+    const otherUser = findUserById(otherUserId);
+
+    return {
+      id: txn.id,
+      type: isSent ? 'Sent' : 'Received',
+      amount: isSent ? -txn.amount : txn.amount,
+      recipient: isSent ? otherUser?.name : null,
+      sender: !isSent ? otherUser?.name : null,
+      date: new Date(txn.date).toISOString().split('T')[0],
+      status: txn.status,
+    };
+  });
 
   const renderTransaction = ({ item }) => (
     <View style={styles.transactionItem}>

@@ -10,7 +10,7 @@ import {
 import { useAppContext } from '../context/AppContext';
 
 const SendMoneyScreen = ({ navigation }) => {
-  const { balance, addTransaction } = useAppContext();
+  const { user, sendMoney } = useAppContext();
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
@@ -25,22 +25,17 @@ const SendMoneyScreen = ({ navigation }) => {
       Alert.alert('Error', 'Please enter a valid amount');
       return;
     }
-    if (numAmount > balance) {
-      Alert.alert('Error', 'Insufficient balance');
-      return;
+
+    const result = sendMoney(user.id, recipient, numAmount, message);
+    if (result.success) {
+      Alert.alert('Success', `Money sent successfully!`);
+      setRecipient('');
+      setAmount('');
+      setMessage('');
+      navigation.goBack();
+    } else {
+      Alert.alert('Error', result.message);
     }
-    // Mock send money
-    const transaction = {
-      id: Date.now().toString(),
-      type: 'Sent',
-      amount: -numAmount,
-      recipient,
-      date: new Date().toISOString().split('T')[0],
-      status: 'Completed',
-    };
-    addTransaction(transaction);
-    Alert.alert('Success', `Money sent to ${recipient}`);
-    navigation.goBack();
   };
 
   return (
@@ -48,7 +43,7 @@ const SendMoneyScreen = ({ navigation }) => {
       <Text style={styles.title}>Send Money</Text>
       <TextInput
         style={styles.input}
-        placeholder="Recipient ID/Phone/Email"
+        placeholder="Recipient ID/Email/Phone (must be registered user)"
         placeholderTextColor="#999"
         value={recipient}
         onChangeText={setRecipient}

@@ -5,13 +5,45 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import { useAppContext } from '../context/AppContext';
 
 const DashboardScreen = ({ navigation }) => {
-  const { balance, transactions, user, logout } = useAppContext();
+  const { user, getUserTransactions, findUserById, getPendingRequests, acceptMoneyRequest, rejectMoneyRequest, logout } = useAppContext();
 
-  const recentTransactions = transactions.slice(0, 5);
+  const balance = user?.balance || 0;
+  const allUserTransactions = getUserTransactions(user?.id || '');
+  const pendingRequests = getPendingRequests(user?.id || '');
+
+  const recentTransactions = allUserTransactions.slice(0, 5).map(txn => {
+    const isSent = txn.senderId === user?.id;
+    const otherUserId = isSent ? txn.recipientId : txn.senderId;
+    const otherUser = findUserById(otherUserId);
+
+    return {
+      id: txn.id,
+      type: isSent ? 'Sent' : 'Received',
+      amount: isSent ? -txn.amount : txn.amount,
+      recipient: isSent ? otherUser?.name : null,
+      sender: !isSent ? otherUser?.name : null,
+      date: new Date(txn.date).toISOString().split('T')[0],
+    };
+  });
+
+  const handleAcceptRequest = (requestId) => {
+    const result = acceptMoneyRequest(requestId);
+    if (result.success) {
+      Alert.alert('Success', 'Money request accepted and payment sent!');
+    } else {
+      Alert.alert('Error', result.message);
+    }
+  };
+
+  const handleRejectRequest = (requestId) => {
+    rejectMoneyRequest(requestId);
+    Alert.alert('Request Rejected', 'The money request has been rejected.');
+  };
 
   const handleLogout = () => {
     logout();
@@ -59,6 +91,41 @@ const DashboardScreen = ({ navigation }) => {
           <Text style={styles.actionButtonText}>History</Text>
         </TouchableOpacity>
       </View>
+      <Text style={styles.sectionTitle}>Pending Money Requests</Text>
+      {pendingRequests.length > 0 ? (
+        <FlatList
+          data={pendingRequests}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            const requester = findUserById(item.requesterId);
+            return (
+              <View style={styles.requestItem}>
+                <Text style={styles.requestText}>
+                  {requester?.name} requested ${item.amount}
+                </Text>
+                <Text style={styles.requestNote}>{item.message}</Text>
+                <View style={styles.requestButtons}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.acceptButton]}
+                    onPress={() => handleAcceptRequest(item.id)}
+                  >
+                    <Text style={styles.buttonText}>Accept</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.rejectButton]}
+                    onPress={() => handleRejectRequest(item.id)}
+                  >
+                    <Text style={styles.buttonText}>Reject</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          }}
+        />
+      ) : (
+        <Text style={styles.noRequestsText}>No pending requests</Text>
+      )}
+
       <Text style={styles.sectionTitle}>Recent Transactions</Text>
       <FlatList
         data={recentTransactions}
@@ -154,6 +221,55 @@ const styles = StyleSheet.create({
   transactionDate: {
     fontSize: 14,
     color: '#666',
+  },
+  noRequestsText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#666',
+    marginVertical: 20,
+  },
+  requestItem: {
+    backgroundColor: '#f9f9f9',
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  requestText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  requestNote: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10,
+  },
+  requestButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  acceptButton: {
+    backgroundColor: '#4CAF50',
+    flex: 1,
+    marginRight: 5,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  rejectButton: {
+    backgroundColor: '#f44336',
+    flex: 1,
+    marginLeft: 5,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
