@@ -17,7 +17,7 @@ const SendMoneyScreen = ({ navigation }) => {
 
   const handleSend = () => {
     if (!recipient || !amount) {
-      Alert.alert('Error', 'Please fill in recipient and amount');
+      Alert.alert('Error', 'Please enter recipient ID and amount');
       return;
     }
     const numAmount = parseFloat(amount);
@@ -26,7 +26,13 @@ const SendMoneyScreen = ({ navigation }) => {
       return;
     }
 
-    const result = sendMoney(user.id, recipient, numAmount, message);
+    // Ensure recipient looks like a unique ID
+    if (!recipient.startsWith('user_')) {
+      Alert.alert('Error', 'Recipient must be a valid user ID. Copy it from the recipient\'s Receive Money screen.');
+      return;
+    }
+
+    const result = sendMoney(user.id, recipient.trim(), numAmount, message);
     if (result.success) {
       Alert.alert('Success', `Money sent successfully!`);
       setRecipient('');
@@ -41,9 +47,12 @@ const SendMoneyScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Send Money</Text>
+      <Text style={styles.instruction}>
+        Get the recipient's unique ID from their Receive Money screen (copy button) and paste it below.
+      </Text>
       <TextInput
         style={styles.input}
-        placeholder="Recipient ID/Email/Phone (must be registered user)"
+        placeholder="Recipient ID (e.g., user_12345_abc)"
         placeholderTextColor="#999"
         value={recipient}
         onChangeText={setRecipient}
@@ -80,8 +89,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
     color: '#333',
+  },
+  instruction: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 15,
+    lineHeight: 20,
   },
   input: {
     borderWidth: 1,

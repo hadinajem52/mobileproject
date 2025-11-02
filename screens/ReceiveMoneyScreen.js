@@ -37,7 +37,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
       return;
     }
 
-    const result = requestMoney(user.id, targetUser, numAmount, requestMessage);
+    const result = requestMoney(user.id, targetUser.trim(), numAmount, requestMessage);
     if (result.success) {
       Alert.alert('Success', 'Money request sent successfully!');
       setShowRequestModal(false);

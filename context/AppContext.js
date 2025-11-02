@@ -100,14 +100,12 @@ export const AppProvider = ({ children }) => {
 
     if (sender.balance < amount) return { success: false, message: 'Insufficient balance' };
 
-    // Find recipient by ID, email, or phone
-    let recipient = findUserById(recipientIdentifier) ||
-                   findUserByEmail(recipientIdentifier) ||
-                   findUserByPhone(recipientIdentifier);
+  // Only allow sending by exact user ID (scan / copy of unique ID)
+  const recipient = findUserById(recipientIdentifier);
 
-    if (!recipient) return { success: false, message: 'Recipient not found. You can only send money to registered users.' };
+  if (!recipient) return { success: false, message: 'Recipient not found. Sending is only allowed using the recipient\'s unique ID (scan their QR).' };
 
-    if (sender.id === recipient.id) return { success: false, message: 'Cannot send money to yourself' };
+  if (sender.id === recipient.id) return { success: false, message: 'Cannot send money to yourself' };
 
     console.log('Sending money from:', sender.name, 'balance:', sender.balance, 'to:', recipient.name, 'balance:', recipient.balance, 'amount:', amount);
 

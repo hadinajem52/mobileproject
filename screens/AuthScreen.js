@@ -41,7 +41,8 @@ const AuthScreen = ({ navigation }) => {
       return;
     }
 
-    const success = login(email, password);
+    const trimmedEmail = email.trim();
+    const success = login(trimmedEmail, password);
     if (success) {
       navigation.replace('Dashboard');
     } else {
@@ -67,7 +68,7 @@ const AuthScreen = ({ navigation }) => {
 
     const userData = {
       name,
-      email,
+      email: email.trim(),
       phone,
       password,
       securityQuestion,
@@ -92,7 +93,8 @@ const AuthScreen = ({ navigation }) => {
       return;
     }
 
-    const recoveredPassword = recoverPassword(email, securityAnswer);
+    const trimmedEmail = email.trim();
+    const recoveredPassword = recoverPassword(trimmedEmail, securityAnswer);
     if (recoveredPassword) {
       Alert.alert('Password Recovered', `Your password is: ${recoveredPassword}`);
       setIsRecovering(false);
