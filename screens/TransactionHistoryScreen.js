@@ -1,0 +1,130 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import { useAppContext } from '../context/AppContext';
+
+const TransactionHistoryScreen = ({ navigation }) => {
+  const { transactions } = useAppContext();
+
+  const renderTransaction = ({ item }) => (
+    <View style={styles.transactionItem}>
+      <View style={styles.transactionDetails}>
+        <Text style={styles.transactionText}>
+          {item.type} ${Math.abs(item.amount)}
+        </Text>
+        <Text style={styles.transactionSubtext}>
+          {item.type === 'Sent' ? `To: ${item.recipient}` : `From: ${item.sender}`}
+        </Text>
+        <Text style={styles.transactionDate}>{item.date}</Text>
+      </View>
+      <Text style={[styles.status, item.status === 'Completed' ? styles.completed : styles.pending]}>
+        {item.status}
+      </Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Transaction History</Text>
+      <View style={styles.filterContainer}>
+        <TouchableOpacity style={styles.filterButton}>
+          <Text style={styles.filterButtonText}>All</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton}>
+          <Text style={styles.filterButtonText}>Sent</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton}>
+          <Text style={styles.filterButtonText}>Received</Text>
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        data={transactions}
+        renderItem={renderTransaction}
+        keyExtractor={(item) => item.id}
+        style={styles.transactionsList}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  filterButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  filterButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  transactionsList: {
+    flex: 1,
+  },
+  transactionItem: {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  transactionDetails: {
+    flex: 1,
+  },
+  transactionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  transactionSubtext: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
+  },
+  transactionDate: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 5,
+  },
+  status: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    padding: 5,
+    borderRadius: 3,
+  },
+  completed: {
+    backgroundColor: '#28a745',
+    color: '#fff',
+  },
+  pending: {
+    backgroundColor: '#ffc107',
+    color: '#000',
+  },
+});
+
+export default TransactionHistoryScreen;
