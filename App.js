@@ -13,6 +13,7 @@ import SendMoneyScreen from './screens/SendMoneyScreen';
 import ReceiveMoneyScreen from './screens/ReceiveMoneyScreen';
 import TransactionHistoryScreen from './screens/TransactionHistoryScreen';
 import SupportScreen from './screens/SupportScreen';
+import ScanQRCodeScreen from './screens/ScanQRCodeScreen';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ function AppNavigator() {
         <Stack.Screen name="Auth" component={AuthScreen} options={{ title: 'Login / Sign Up' }} />
         <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Dashboard' }} />
         <Stack.Screen name="SendMoney" component={SendMoneyScreen} options={{ title: 'Send Money' }} />
+        <Stack.Screen name="ScanQRCode" component={ScanQRCodeScreen} options={{ title: 'Scan QR Code' }} />
         <Stack.Screen name="ReceiveMoney" component={ReceiveMoneyScreen} options={{ title: 'Receive Money' }} />
         <Stack.Screen name="TransactionHistory" component={TransactionHistoryScreen} options={{ title: 'Transaction History' }} />
         <Stack.Screen name="Support" component={SupportScreen} options={{ title: 'Support' }} />

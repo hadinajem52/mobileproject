@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,21 @@ import {
 } from 'react-native';
 import { useAppContext } from '../context/AppContext';
 
-const SendMoneyScreen = ({ navigation }) => {
+const SendMoneyScreen = ({ navigation, route }) => {
   const { user, sendMoney } = useAppContext();
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
+  const [scannedFromCamera, setScannedFromCamera] = useState(false);
+
+  useEffect(() => {
+    if (route?.params?.recipientFromQR) {
+      setRecipient(route.params.recipientFromQR);
+      setScannedFromCamera(true);
+      // clear param after using
+      navigation.setParams({ recipientFromQR: undefined });
+    }
+  }, [route?.params?.recipientFromQR]);
 
   const handleSend = () => {
     if (!recipient || !amount) {
@@ -38,6 +48,7 @@ const SendMoneyScreen = ({ navigation }) => {
       setRecipient('');
       setAmount('');
       setMessage('');
+      setScannedFromCamera(false);
       navigation.goBack();
     } else {
       Alert.alert('Error', result.message);
@@ -48,15 +59,26 @@ const SendMoneyScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Send Money</Text>
       <Text style={styles.instruction}>
-        Get the recipient's unique ID from their Receive Money screen (copy button) and paste it below.
+        Get the recipient's unique ID from their Receive Money screen (copy or QR), or tap "Scan QR" to scan their QR code using your device camera (screenshots are not supported).
       </Text>
-      <TextInput
-        style={styles.input}
+      <View style={styles.row}>
+        <TextInput
+        style={[styles.input, styles.inputRow]}
         placeholder="Recipient ID (e.g., user_12345_abc)"
         placeholderTextColor="#999"
         value={recipient}
         onChangeText={setRecipient}
       />
+        <TouchableOpacity
+          style={styles.scanButton}
+          onPress={() => navigation.replace('ScanQRCode')}
+        >
+          <Text style={styles.scanButtonText}>Scan QR</Text>
+        </TouchableOpacity>
+      </View>
+      {scannedFromCamera && (
+        <Text style={styles.scannedBadge}>Recipient scanned via camera</Text>
+      )}
       <TextInput
         style={styles.input}
         placeholder="Amount"
@@ -106,6 +128,34 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     fontSize: 16,
+  },
+  inputRow: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  scanButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    marginLeft: 8,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scanButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  scannedBadge: {
+    color: '#007bff',
+    fontWeight: '600',
+    marginTop: 8,
+    marginBottom: 12,
+    textAlign: 'center'
   },
   messageInput: {
     height: 80,

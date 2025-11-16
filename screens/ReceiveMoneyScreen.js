@@ -8,6 +8,7 @@ import {
   TextInput,
   Modal,
   Clipboard,
+  Share,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useAppContext } from '../context/AppContext';
@@ -65,6 +66,14 @@ const ReceiveMoneyScreen = ({ navigation }) => {
     }
   };
 
+  const shareId = async () => {
+    try {
+      await Share.share({ message: `My payment ID: ${userId}` });
+    } catch (error) {
+      Alert.alert('Error', 'Failed to share ID.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Receive Money</Text>
@@ -72,9 +81,14 @@ const ReceiveMoneyScreen = ({ navigation }) => {
       <View style={styles.idContainer}>
         <Text style={styles.label}>Your Unique ID:</Text>
         <Text style={styles.userId}>{userId}</Text>
-        <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
-          <Text style={styles.copyButtonText}>Copy</Text>
-        </TouchableOpacity>
+        <View style={styles.copyShareButtons}> 
+          <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
+            <Text style={styles.copyButtonText}>Copy</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.copyButton, styles.shareButton]} onPress={shareId}>
+            <Text style={styles.copyButtonText}>Share</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.qrContainer}>
@@ -88,6 +102,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
         <Text style={styles.qrHint}>Tap to enlarge</Text>
+        <Text style={styles.qrNote}>Tip: Show this QR code on your device screen; the payer must scan it using their app's camera (screenshots or images are not supported for scanning).</Text>
       </View>
 
       <TouchableOpacity style={styles.requestButton} onPress={handleRequestMoney}>
@@ -194,6 +209,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  shareButton: {
+    backgroundColor: '#007bff',
+    marginLeft: 10,
+  },
+  copyShareButtons: {
+    flexDirection: 'row'
+  },
   qrContainer: {
     backgroundColor: '#fff',
     padding: 20,
@@ -215,6 +237,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999',
     marginTop: 10,
+  },
+  qrNote: {
+    fontSize: 13,
+    color: '#555',
+    marginTop: 8,
+    textAlign: 'center'
   },
   requestButton: {
     backgroundColor: '#007bff',
