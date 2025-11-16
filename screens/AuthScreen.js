@@ -8,19 +8,34 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useAppContext } from '../context/AppContext';
 
+const securityQuestions = [
+  "What was the name of your first pet?",
+  "What city were you born in?",
+  "What is your mother's maiden name?",
+  "What was the name of your first school?",
+  "What is your favorite color?",
+  "What was your childhood nickname?"
+];
+
 const AuthScreen = ({ navigation }) => {
-  const { registerUser, login, recoverPassword } = useAppContext();
+  const { registerUser, login, verifySecurityAnswers, updatePassword, getSecurityQuestion } = useAppContext();
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovering, setIsRecovering] = useState(false);
+  const [recoveryStep, setRecoveryStep] = useState(0);
+  const [recoveryUser, setRecoveryUser] = useState(null);
+  const [recoveryAnswer, setRecoveryAnswer] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [securityQuestion, setSecurityQuestion] = useState('');
-  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [securityQ, setSecurityQ] = useState(securityQuestions[0]);
+  const [answer, setAnswer] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   const handleAuth = () => {
     if (isRecovering) {
@@ -51,7 +66,7 @@ const AuthScreen = ({ navigation }) => {
   };
 
   const handleSignup = () => {
-    if (!name || !email || !phone || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
+    if (!name || !email || !phone || !password || !confirmPassword || !answer) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
@@ -71,8 +86,8 @@ const AuthScreen = ({ navigation }) => {
       email: email.trim(),
       phone,
       password,
-      securityQuestion,
-      securityAnswer,
+      securityQuestion: securityQ,
+      securityAnswer: answer,
     };
 
     registerUser(userData);
@@ -82,45 +97,85 @@ const AuthScreen = ({ navigation }) => {
     setPassword('');
     setName('');
     setPhone('');
-    setSecurityQuestion('');
-    setSecurityAnswer('');
+    setSecurityQ(securityQuestions[0]);
+    setAnswer('');
     setConfirmPassword('');
   };
 
   const handlePasswordRecovery = () => {
-    if (!email || !securityAnswer) {
-      Alert.alert('Error', 'Please enter email and security answer');
-      return;
-    }
-
-    const trimmedEmail = email.trim();
-    const recoveredPassword = recoverPassword(trimmedEmail, securityAnswer);
-    if (recoveredPassword) {
-      Alert.alert('Password Recovered', `Your password is: ${recoveredPassword}`);
-      setIsRecovering(false);
-      setEmail('');
-      setSecurityAnswer('');
-    } else {
-      Alert.alert('Error', 'Invalid email or security answer');
+    if (recoveryStep === 0) {
+      if (!email) {
+        Alert.alert('Error', 'Please enter email');
+        return;
+      }
+      const question = getSecurityQuestion(email.trim());
+      if (!question) {
+        Alert.alert('Error', 'Email not found');
+        return;
+      }
+      setRecoveryUser({ email: email.trim(), question });
+      setRecoveryStep(1);
+    } else if (recoveryStep === 1) {
+      if (!recoveryAnswer) {
+        Alert.alert('Error', 'Please answer the question');
+        return;
+      }
+      const verified = verifySecurityAnswers(recoveryUser.email, recoveryAnswer);
+      if (verified) {
+        setRecoveryStep(2);
+      } else {
+        Alert.alert('Error', 'Incorrect answer');
+      }
+    } else if (recoveryStep === 2) {
+      if (!newPassword || !confirmNewPassword) {
+        Alert.alert('Error', 'Please enter new password');
+        return;
+      }
+      if (newPassword !== confirmNewPassword) {
+        Alert.alert('Error', 'Passwords do not match');
+        return;
+      }
+      if (newPassword.length < 6) {
+        Alert.alert('Error', 'Password must be at least 6 characters');
+        return;
+      }
+      const success = updatePassword(recoveryUser.email, newPassword);
+      if (success) {
+        Alert.alert('Success', 'Password updated successfully! Please login.');
+        setIsRecovering(false);
+        setRecoveryStep(0);
+        setRecoveryUser(null);
+        setRecoveryAnswer('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+        setEmail('');
+      } else {
+        Alert.alert('Error', 'Failed to update password');
+      }
     }
   };
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setIsRecovering(false);
+    setRecoveryStep(0);
+    setRecoveryUser(null);
+    setRecoveryAnswer('');
+    setNewPassword('');
+    setConfirmNewPassword('');
     setEmail('');
     setPassword('');
     setName('');
     setPhone('');
-    setSecurityQuestion('');
-    setSecurityAnswer('');
+    setSecurityQ(securityQuestions[0]);
+    setAnswer('');
     setConfirmPassword('');
   };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>
-        {isRecovering ? 'Password Recovery' : isLogin ? 'Login' : 'Sign Up'}
+        {isRecovering ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password') : isLogin ? 'Login' : 'Sign Up'}
       </Text>
 
       {!isRecovering && (
@@ -157,19 +212,24 @@ const AuthScreen = ({ navigation }) => {
 
           {!isLogin && (
             <>
+              <Text style={styles.label}>Security Question</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={securityQ}
+                  onValueChange={(itemValue) => setSecurityQ(itemValue)}
+                  style={styles.picker}
+                >
+                  {securityQuestions.map((q, index) => (
+                    <Picker.Item key={index} label={q} value={q} />
+                  ))}
+                </Picker>
+              </View>
               <TextInput
                 style={styles.input}
-                placeholder="Security Question (e.g., What is your pet's name?)"
+                placeholder="Answer"
                 placeholderTextColor="#999"
-                value={securityQuestion}
-                onChangeText={setSecurityQuestion}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Security Answer"
-                placeholderTextColor="#999"
-                value={securityAnswer}
-                onChangeText={setSecurityAnswer}
+                value={answer}
+                onChangeText={setAnswer}
               />
               <TextInput
                 style={styles.input}
@@ -205,28 +265,55 @@ const AuthScreen = ({ navigation }) => {
 
       {isRecovering && (
         <>
-          <TextInput
-            style={styles.input}
-            placeholder="Email Address"
-            placeholderTextColor="#999"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Security Answer"
-            placeholderTextColor="#999"
-            value={securityAnswer}
-            onChangeText={setSecurityAnswer}
-          />
+          {recoveryStep === 0 && (
+            <TextInput
+              style={styles.input}
+              placeholder="Email Address"
+              placeholderTextColor="#999"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          )}
+          {recoveryStep === 1 && recoveryUser && (
+            <>
+              <Text style={styles.label}>{recoveryUser.question}</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Your Answer"
+                placeholderTextColor="#999"
+                value={recoveryAnswer}
+                onChangeText={setRecoveryAnswer}
+              />
+            </>
+          )}
+          {recoveryStep === 2 && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="New Password (min 6 characters)"
+                placeholderTextColor="#999"
+                value={newPassword}
+                onChangeText={setNewPassword}
+                secureTextEntry
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm New Password"
+                placeholderTextColor="#999"
+                value={confirmNewPassword}
+                onChangeText={setConfirmNewPassword}
+                secureTextEntry
+              />
+            </>
+          )}
         </>
       )}
 
       <TouchableOpacity style={styles.button} onPress={handleAuth}>
         <Text style={styles.buttonText}>
-          {isRecovering ? 'Recover Password' : isLogin ? 'Login' : 'Sign Up'}
+          {isRecovering ? (recoveryStep === 0 ? 'Next' : recoveryStep === 1 ? 'Verify Answer' : 'Update Password') : isLogin ? 'Login' : 'Sign Up'}
         </Text>
       </TouchableOpacity>
 
@@ -245,8 +332,19 @@ const AuthScreen = ({ navigation }) => {
       )}
 
       {isRecovering && (
-        <TouchableOpacity onPress={() => setIsRecovering(false)}>
-          <Text style={styles.recoverText}>Back to Login</Text>
+        <TouchableOpacity onPress={() => {
+          if (recoveryStep > 0) {
+            setRecoveryStep(recoveryStep - 1);
+          } else {
+            setIsRecovering(false);
+            setRecoveryStep(0);
+            setRecoveryUser(null);
+            setRecoveryAnswer('');
+            setNewPassword('');
+            setConfirmNewPassword('');
+          }
+        }}>
+          <Text style={styles.recoverText}>{recoveryStep === 0 ? 'Back to Login' : 'Back'}</Text>
         </TouchableOpacity>
       )}
     </ScrollView>
@@ -297,6 +395,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#dc3545',
     fontSize: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333',
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    marginBottom: 15,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
   },
 });
 

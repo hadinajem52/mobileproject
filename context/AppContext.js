@@ -74,12 +74,25 @@ export const AppProvider = ({ children }) => {
     return false;
   };
 
-  const recoverPassword = (email, securityAnswer) => {
-    const foundUser = registeredUsers.find(u => u.email === email && u.securityAnswer === securityAnswer);
-    if (foundUser) {
-      return foundUser.password;
+  const verifySecurityAnswers = (email, answer) => {
+    const foundUser = registeredUsers.find(u => u.email === email);
+    if (!foundUser || !foundUser.securityQuestion || !foundUser.securityAnswer) return false;
+    return foundUser.securityAnswer.toLowerCase() === answer.toLowerCase();
+  };
+
+  const updatePassword = (email, newPassword) => {
+    const userIndex = registeredUsers.findIndex(u => u.email === email);
+    if (userIndex !== -1) {
+      registeredUsers[userIndex].password = newPassword;
+      saveData();
+      return true;
     }
-    return null;
+    return false;
+  };
+
+  const getSecurityQuestion = (email) => {
+    const foundUser = registeredUsers.find(u => u.email === email);
+    return foundUser ? foundUser.securityQuestion : null;
   };
 
   const findUserById = (userId) => {
@@ -236,7 +249,9 @@ export const AppProvider = ({ children }) => {
       isLoading,
       registerUser,
       login,
-      recoverPassword,
+      verifySecurityAnswers,
+      updatePassword,
+      getSecurityQuestion,
       findUserById,
       findUserByEmail,
       findUserByPhone,
