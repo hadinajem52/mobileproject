@@ -237,7 +237,7 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    AsyncStorage.clear();
+    AsyncStorage.removeItem('user');
   };
 
   return (
