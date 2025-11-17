@@ -94,7 +94,7 @@ const ScanQRCodeScreen = ({ navigation }) => {
       <View style={styles.container}>
         <TouchableOpacity 
         style={styles.backButton} 
-        onPress={() => navigation.navigate('SendMoney')}
+        onPress={() => navigation.goBack()}
       >
         <Ionicons name="arrow-back" size={28} color="#007bff" />
       </TouchableOpacity>

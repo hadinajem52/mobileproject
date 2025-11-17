@@ -51,7 +51,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
       setAmount('');
       setMessage('');
       setScannedFromCamera(false);
-      navigation.navigate('Dashboard');
+      navigation.goBack();
     } else {
       Alert.alert('Error', result.message);
     }
@@ -62,7 +62,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
       <View style={styles.container}>
         <TouchableOpacity 
         style={styles.backButton} 
-        onPress={() => navigation.navigate('Dashboard')}
+        onPress={() => navigation.goBack()}
       >
         <Ionicons name="arrow-back" size={28} color="#007bff" />
       </TouchableOpacity>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -32,7 +32,12 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator 
-        screenOptions={{ headerShown: false }}
+        screenOptions={{ 
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+        }}
       >
         {!user ? (
           <>
