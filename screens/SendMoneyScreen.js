@@ -60,14 +60,8 @@ const SendMoneyScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <TouchableOpacity 
-        style={styles.backButton} 
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back" size={28} color="#007bff" />
-      </TouchableOpacity>
-      <Text style={styles.title}>Send Money</Text>
-      <Text style={styles.instruction}>
+        <Text style={styles.title}>Send Money</Text>
+        <Text style={styles.instruction}>
         Get the recipient's unique ID from their Receive Money screen (copy or QR), or tap "Scan QR" to scan their QR code using your device camera (screenshots are not supported).
       </Text>
       <View style={styles.row}>
@@ -121,9 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
-  },
-  backButton: {
-    marginBottom: 15,
   },
   title: {
     fontSize: 24,

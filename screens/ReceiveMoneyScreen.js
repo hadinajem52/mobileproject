@@ -80,15 +80,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <TouchableOpacity 
-        style={styles.backButton} 
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back" size={28} color="#007bff" />
-      </TouchableOpacity>
-      <Text style={styles.title}>Receive Money</Text>
-
-      <View style={styles.idContainer}>
+        <Text style={styles.title}>Receive Money</Text>      <View style={styles.idContainer}>
         <Text style={styles.label}>Your Unique ID:</Text>
         <Text style={styles.userId}>{userId}</Text>
         <View style={styles.copyShareButtons}> 
@@ -190,9 +182,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
-  },
-  backButton: {
-    marginBottom: 15,
   },
   title: {
     fontSize: 24,

@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { AppProvider, useAppContext } from './context/AppContext';
 
 import HomeScreen from './screens/HomeScreen';
@@ -16,7 +17,6 @@ import ReceiveMoneyScreen from './screens/ReceiveMoneyScreen';
 import TransactionHistoryScreen from './screens/TransactionHistoryScreen';
 import SupportScreen from './screens/SupportScreen';
 import ScanQRCodeScreen from './screens/ScanQRCodeScreen';
-import PendingRequestsScreen from './screens/PendingRequestsScreen';
 import AccountScreen from './screens/AccountScreen';
 
 const Stack = createStackNavigator();
@@ -44,13 +44,29 @@ function MainTabNavigator() {
         component={DashboardScreen}
         options={{
           tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
         }}
       />
       <Tab.Screen 
-        name="PendingRequests" 
-        component={PendingRequestsScreen}
+        name="SendMoney" 
+        component={SendMoneyScreen}
         options={{
-          tabBarLabel: 'Requests',
+          tabBarLabel: 'Send',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="send" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="ReceiveMoney" 
+        component={ReceiveMoneyScreen}
+        options={{
+          tabBarLabel: 'Receive',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="download" color={color} size={size} />
+          ),
         }}
       />
       <Tab.Screen 
@@ -58,6 +74,9 @@ function MainTabNavigator() {
         component={AccountScreen}
         options={{
           tabBarLabel: 'Account',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" color={color} size={size} />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -103,16 +122,8 @@ function AppNavigator() {
               component={MainTabNavigator} 
             />
             <Stack.Screen 
-              name="SendMoney" 
-              component={SendMoneyScreen} 
-            />
-            <Stack.Screen 
               name="ScanQRCode" 
               component={ScanQRCodeScreen} 
-            />
-            <Stack.Screen 
-              name="ReceiveMoney" 
-              component={ReceiveMoneyScreen} 
             />
             <Stack.Screen 
               name="TransactionHistory" 

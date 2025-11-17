@@ -11,10 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppContext } from '../context/AppContext';
 
 const DashboardScreen = ({ navigation }) => {
-  const { user, getUserTransactions, findUserById } = useAppContext();
+  const { user, getUserTransactions, findUserById, getPendingRequests, acceptMoneyRequest, rejectMoneyRequest } = useAppContext();
 
   const balance = user?.balance || 0;
   const allUserTransactions = getUserTransactions(user?.id || '');
+  const pendingRequests = getPendingRequests(user?.id || '');
 
   const recentTransactions = allUserTransactions.slice(0, 5).map(txn => {
     const isSent = txn.senderId === user?.id;
@@ -30,6 +31,20 @@ const DashboardScreen = ({ navigation }) => {
       date: new Date(txn.date).toISOString().split('T')[0],
     };
   });
+
+  const handleAcceptRequest = (requestId) => {
+    const result = acceptMoneyRequest(requestId);
+    if (result.success) {
+      Alert.alert('Success', 'Money request accepted and payment sent!');
+    } else {
+      Alert.alert('Error', result.message);
+    }
+  };
+
+  const handleRejectRequest = (requestId) => {
+    rejectMoneyRequest(requestId);
+    Alert.alert('Request Rejected', 'The money request has been rejected.');
+  };
 
   const renderTransaction = ({ item }) => (
     <View style={styles.transactionItem}>
@@ -48,26 +63,41 @@ const DashboardScreen = ({ navigation }) => {
           <Text style={styles.balanceLabel}>Current Balance</Text>
           <Text style={styles.balanceAmount}>${balance.toFixed(2)}</Text>
         </View>
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => navigation.navigate('SendMoney')}
-        >
-          <Text style={styles.actionButtonText}>Send Money</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => navigation.navigate('ReceiveMoney')}
-        >
-          <Text style={styles.actionButtonText}>Receive Money</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => navigation.navigate('TransactionHistory')}
-        >
-          <Text style={styles.actionButtonText}>History</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.sectionTitle}>Pending Money Requests</Text>
+      {pendingRequests.length > 0 ? (
+        <FlatList
+          data={pendingRequests}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            const requester = findUserById(item.requesterId);
+            return (
+              <View style={styles.requestItem}>
+                <Text style={styles.requestText}>
+                  {requester?.name} requested ${item.amount}
+                </Text>
+                <Text style={styles.requestNote}>{item.message}</Text>
+                <View style={styles.requestButtons}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.acceptButton]}
+                    onPress={() => handleAcceptRequest(item.id)}
+                  >
+                    <Text style={styles.buttonText}>Accept</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.rejectButton]}
+                    onPress={() => handleRejectRequest(item.id)}
+                  >
+                    <Text style={styles.buttonText}>Reject</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          }}
+        />
+      ) : (
+        <Text style={styles.noRequestsText}>No pending requests</Text>
+      )}
+
       <Text style={styles.sectionTitle}>Recent Transactions</Text>
       <FlatList
         data={recentTransactions}
@@ -155,6 +185,55 @@ const styles = StyleSheet.create({
   transactionDate: {
     fontSize: 14,
     color: '#666',
+  },
+  noRequestsText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#666',
+    marginVertical: 20,
+  },
+  requestItem: {
+    backgroundColor: '#f9f9f9',
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  requestText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  requestNote: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10,
+  },
+  requestButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  acceptButton: {
+    backgroundColor: '#4CAF50',
+    flex: 1,
+    marginRight: 5,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  rejectButton: {
+    backgroundColor: '#f44336',
+    flex: 1,
+    marginLeft: 5,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
