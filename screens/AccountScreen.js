@@ -103,7 +103,7 @@ const AccountScreen = ({ navigation }) => {
             style={styles.addAccountButton}
             onPress={handleAddAccount}
           >
-            <Ionicons name="add-circle-outline" size={24} color="#007bff" />
+            <Ionicons name="add-circle-outline" size={24} color="#00ea00ff" />
             <Text style={styles.addAccountText}>Add Another Account</Text>
           </TouchableOpacity>
         )}
@@ -111,12 +111,12 @@ const AccountScreen = ({ navigation }) => {
         {/* Options */}
         <View style={styles.optionsContainer}>
           <TouchableOpacity style={styles.optionButton} onPress={handleSupport}>
-            <Ionicons name="help-circle-outline" size={24} color="#fff" />
+            <Ionicons name="help-circle-outline" size={24} color="#000000ff" />
             <Text style={styles.optionText}>Support</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={[styles.optionButton, styles.logoutButton]} onPress={handleLogout}>
-            <Ionicons name="log-out-outline" size={24} color="#fff" />
+            <Ionicons name="log-out-outline" size={24} color="#000000ff" />
             <Text style={styles.logoutText}>Logout All Accounts</Text>
           </TouchableOpacity>
         </View>
@@ -142,7 +142,7 @@ const AccountScreen = ({ navigation }) => {
                 onPress={() => setShowAccountSwitcher(false)}
                 style={styles.modalCloseButton}
               >
-                <Ionicons name="close" size={24} color="#333" />
+                <Ionicons name="close" size={24} color="#00ea00ff" />
               </TouchableOpacity>
             </View>
 
@@ -168,7 +168,7 @@ const AccountScreen = ({ navigation }) => {
                       </View>
                     </View>
                     {account.id === user?.id && (
-                      <Ionicons name="checkmark-circle" size={24} color="#007bff" />
+                      <Ionicons name="checkmark-circle" size={24} color="#00ea00ff" />
                     )}
                   </TouchableOpacity>
                   
@@ -188,7 +188,7 @@ const AccountScreen = ({ navigation }) => {
                 style={styles.addAccountButtonModal}
                 onPress={handleAddAccount}
               >
-                <Ionicons name="add-circle" size={24} color="#007bff" />
+                <Ionicons name="add-circle" size={24} color="#00ea00ff" />
                 <Text style={styles.addAccountTextModal}>Add Account</Text>
               </TouchableOpacity>
             </ScrollView>
@@ -202,21 +202,22 @@ const AccountScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#1e1f1e',
   },
   title: {
     fontSize: 24,
-    color: '#333',
+    color: '#00ea00ff',
     marginBottom: 20,
     textAlign: 'center',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   userInfo: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     padding: 20,
     borderRadius: 10,
     marginBottom: 15,
@@ -233,29 +234,29 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
   },
   avatarText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 24,
     fontFamily: 'StackSansHeadline-Bold',
   },
   userName: {
     fontSize: 18,
-    color: '#333',
+    color: '#cccccc',
     marginBottom: 2,
     fontFamily: 'StackSansHeadline-Bold',
   },
   userEmail: {
     fontSize: 14,
-    color: '#666',
+    color: '#888888',
     fontFamily: 'StackSansHeadline-Regular',
   },
   addAccountButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     padding: 15,
     borderRadius: 10,
     flexDirection: 'row',
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   addAccountText: {
-    color: '#007bff',
+    color: '#00ea00ff',
     fontSize: 16,
     marginLeft: 8,
     fontFamily: 'StackSansHeadline-Medium',
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   optionButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -282,16 +283,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   optionText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 16,
     marginLeft: 8,
     fontFamily: 'StackSansHeadline-Medium',
   },
   logoutButton: {
-    backgroundColor: '#dc3545',
+    backgroundColor: '#ff4444',
   },
   logoutText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 16,
     marginLeft: 8,
     fontFamily: 'StackSansHeadline-Medium',
@@ -305,7 +306,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     maxHeight: '80%',
@@ -317,11 +318,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#333333',
   },
   modalTitle: {
     fontSize: 20,
-    color: '#333',
+    color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   modalCloseButton: {
@@ -332,7 +333,7 @@ const styles = StyleSheet.create({
   },
   accountItem: {
     marginBottom: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#2a2b2a',
     borderRadius: 10,
     overflow: 'hidden',
   },
@@ -351,28 +352,28 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: '#6c757d',
+    backgroundColor: '#666666',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   accountAvatarActive: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
   },
   accountAvatarText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 20,
     fontFamily: 'StackSansHeadline-Bold',
   },
   accountName: {
     fontSize: 16,
-    color: '#333',
+    color: '#cccccc',
     marginBottom: 2,
     fontFamily: 'StackSansHeadline-Medium',
   },
   accountEmail: {
     fontSize: 13,
-    color: '#666',
+    color: '#888888',
     fontFamily: 'StackSansHeadline-Regular',
   },
   logoutAccountButton: {
@@ -386,12 +387,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
-    backgroundColor: '#e3f2fd',
+    backgroundColor: '#2a2b2a',
     borderRadius: 10,
     marginTop: 10,
   },
   addAccountTextModal: {
-    color: '#007bff',
+    color: '#00ea00ff',
     fontSize: 16,
     marginLeft: 8,
     fontFamily: 'StackSansHeadline-Medium',

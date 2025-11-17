@@ -27,15 +27,18 @@ function MainTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#007bff',
-        tabBarInactiveTintColor: '#666',
+        tabBarActiveTintColor: '#00ff00',
+        tabBarInactiveTintColor: '#cccccc',
         tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopColor: '#ddd',
+          backgroundColor: '#1e1f1e',
+          borderTopColor: '#333333',
           borderTopWidth: 1,
           paddingBottom: 5,
           paddingTop: 5,
           height: 60,
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'StackSansHeadline-Medium',
         },
         headerShown: false,
       }}
@@ -89,8 +92,8 @@ function AppNavigator() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
-        <Text style={{ fontSize: 18, color: '#333', fontFamily: 'StackSansHeadline-Regular' }}>Loading...</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1e1f1e' }}>
+        <Text style={{ fontSize: 18, color: '#00ea00ff', fontFamily: 'StackSansHeadline-Regular' }}>Loading...</Text>
       </View>
     );
   }
@@ -141,7 +144,7 @@ function AppNavigator() {
           </>
         )}
       </Stack.Navigator>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </NavigationContainer>
   );
 }

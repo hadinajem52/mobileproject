@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   logo: {
     width: 100,
@@ -35,25 +35,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 10,
-    color: '#333',
+    color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 30,
-    color: '#666',
+    color: '#cccccc',
     fontFamily: 'StackSansHeadline-Regular',
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     padding: 15,
     borderRadius: 5,
     width: '80%',
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 18,
     fontFamily: 'StackSansHeadline-Medium',
   },

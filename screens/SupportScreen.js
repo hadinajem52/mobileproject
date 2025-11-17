@@ -40,7 +40,7 @@ const SupportScreen = ({ navigation }) => {
         style={styles.backButton} 
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={28} color="#007bff" />
+        <Ionicons name="arrow-back" size={28} color="#00ea00ff" />
       </TouchableOpacity>
       <Text style={styles.title}>Support & Contact</Text>
       
@@ -98,12 +98,12 @@ const SupportScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   backButton: {
     marginBottom: 15,
@@ -111,24 +111,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
-    color: '#333',
+    color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   sectionTitle: {
     fontSize: 20,
     marginTop: 20,
     marginBottom: 10,
-    color: '#333',
+    color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#333333',
     padding: 15,
     marginBottom: 15,
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     fontSize: 16,
+    color: '#cccccc',
     fontFamily: 'StackSansHeadline-Regular',
   },
   messageInput: {
@@ -136,49 +137,49 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 20,
   },
   buttonText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 18,
     fontFamily: 'StackSansHeadline-Medium',
   },
   faqItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     padding: 15,
     marginBottom: 10,
     borderRadius: 5,
   },
   faqQuestion: {
     fontSize: 16,
-    color: '#333',
+    color: '#cccccc',
     marginBottom: 5,
     fontFamily: 'StackSansHeadline-Medium',
   },
   faqAnswer: {
     fontSize: 14,
-    color: '#666',
+    color: '#888888',
     fontFamily: 'StackSansHeadline-Regular',
   },
   contactInfo: {
     fontSize: 16,
-    color: '#333',
+    color: '#cccccc',
     marginBottom: 5,
     fontFamily: 'StackSansHeadline-Regular',
   },
   linkButton: {
-    backgroundColor: '#6c757d',
+    backgroundColor: '#666666',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 10,
   },
   linkButtonText: {
-    color: '#fff',
+    color: '#cccccc',
     fontSize: 16,
     fontFamily: 'StackSansHeadline-Medium',
   },

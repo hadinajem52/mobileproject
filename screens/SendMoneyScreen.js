@@ -109,34 +109,35 @@ const SendMoneyScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   title: {
     fontSize: 24,
     marginBottom: 10,
-    color: '#333',
+    color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   instruction: {
     fontSize: 14,
-    color: '#666',
+    color: '#cccccc',
     marginBottom: 15,
     lineHeight: 20,
     fontFamily: 'StackSansHeadline-Regular',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#333333',
     padding: 15,
     marginBottom: 15,
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     fontSize: 16,
+    color: '#cccccc',
     fontFamily: 'StackSansHeadline-Regular',
   },
   inputRow: {
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scanButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     paddingVertical: 12,
     paddingHorizontal: 15,
     marginLeft: 8,
@@ -157,11 +158,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scanButtonText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontFamily: 'StackSansHeadline-Medium',
   },
   scannedBadge: {
-    color: '#007bff',
+    color: '#00ea00ff',
     marginTop: 8,
     marginBottom: 12,
     textAlign: 'center',
@@ -172,14 +173,14 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 18,
     fontFamily: 'StackSansHeadline-Medium',
   },

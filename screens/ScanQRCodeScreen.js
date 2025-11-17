@@ -99,7 +99,7 @@ const ScanQRCodeScreen = ({ navigation }) => {
           style={styles.backButton} 
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={28} color="#007bff" />
+          <Ionicons name="arrow-back" size={28} color="#00ea00ff" />
         </TouchableOpacity>
         
         <Text style={styles.title}>Scan QR Code</Text>
@@ -138,12 +138,12 @@ const ScanQRCodeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
     alignItems: 'center',
   },
   backButton: {
@@ -153,12 +153,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginBottom: 10,
-    color: '#333',
+    color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
   },
   instruction: {
     fontSize: 14,
-    color: '#666',
+    color: '#cccccc',
     marginBottom: 10,
     fontFamily: 'StackSansHeadline-Regular',
   },
@@ -171,14 +171,14 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     marginTop: 12,
-    backgroundColor: '#6c757d',
+    backgroundColor: '#666666',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
     width: '100%'
   },
   cancelText: {
-    color: '#fff',
+    color: '#cccccc',
     fontSize: 16,
     fontFamily: 'StackSansHeadline-Medium',
   }
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   toggleButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
   }
 });
 

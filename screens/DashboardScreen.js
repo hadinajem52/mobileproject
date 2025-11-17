@@ -8,7 +8,9 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../context/AppContext';
+import Card from '../components/Card';
 
 const DashboardScreen = ({ navigation }) => {
   const { user, getUserTransactions, findUserById, getPendingRequests, acceptMoneyRequest, rejectMoneyRequest } = useAppContext();
@@ -58,53 +60,78 @@ const DashboardScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome, {user?.name || 'User'}!</Text>
-        <View style={styles.balanceContainer}>
-          <Text style={styles.balanceLabel}>Current Balance</Text>
-          <Text style={styles.balanceAmount}>${balance.toFixed(2)}</Text>
-        </View>
-      <Text style={styles.sectionTitle}>Pending Money Requests</Text>
-      {pendingRequests.length > 0 ? (
-        <FlatList
-          data={pendingRequests}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            const requester = findUserById(item.requesterId);
-            return (
-              <View style={styles.requestItem}>
-                <Text style={styles.requestText}>
-                  {requester?.name} requested ${item.amount}
-                </Text>
-                <Text style={styles.requestNote}>{item.message}</Text>
-                <View style={styles.requestButtons}>
-                  <TouchableOpacity
-                    style={[styles.button, styles.acceptButton]}
-                    onPress={() => handleAcceptRequest(item.id)}
-                  >
-                    <Text style={styles.buttonText}>Accept</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.button, styles.rejectButton]}
-                    onPress={() => handleRejectRequest(item.id)}
-                  >
-                    <Text style={styles.buttonText}>Reject</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            );
-          }}
-        />
-      ) : (
-        <Text style={styles.noRequestsText}>No pending requests</Text>
-      )}
+        <Text style={styles.title}>Welcome back, {user?.name || 'User'}!</Text>
 
-      <Text style={styles.sectionTitle}>Recent Transactions</Text>
-      <FlatList
-        data={recentTransactions}
-        renderItem={renderTransaction}
-        keyExtractor={(item) => item.id}
-        style={styles.transactionsList}
-      />
+        <Card style={styles.balanceCard}>
+          <View style={styles.balanceHeader}>
+            <Ionicons name="wallet" size={24} color="#2d2f30ff" />
+            <Text style={styles.balanceLabel}>Total Balance</Text>
+          </View>
+          <Text style={styles.balanceAmount}>${balance.toFixed(2)}</Text>
+        </Card>
+
+        <Card>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('SendMoney')}>
+              <Ionicons name="send" size={24} color="#000000ff" />
+              <Text style={styles.actionButtonText}>Send</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('ReceiveMoney')}>
+              <Ionicons name="download" size={24} color="#000000ff" />
+              <Text style={styles.actionButtonText}>Receive</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('ScanQRCode')}>
+              <Ionicons name="qr-code" size={24} color="#000000ff" />
+              <Text style={styles.actionButtonText}>Scan</Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
+
+        {pendingRequests.length > 0 && (
+          <Card>
+            <Text style={styles.sectionTitle}>Pending Requests</Text>
+            <FlatList
+              data={pendingRequests}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => {
+                const requester = findUserById(item.requesterId);
+                return (
+                  <View style={styles.requestItem}>
+                    <Text style={styles.requestText}>
+                      {requester?.name} requested ${item.amount}
+                    </Text>
+                    <Text style={styles.requestNote}>{item.message}</Text>
+                    <View style={styles.requestButtons}>
+                      <TouchableOpacity
+                        style={[styles.button, styles.acceptButton]}
+                        onPress={() => handleAcceptRequest(item.id)}
+                      >
+                        <Text style={styles.buttonText}>Accept</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.button, styles.rejectButton]}
+                        onPress={() => handleRejectRequest(item.id)}
+                      >
+                        <Text style={styles.buttonText}>Reject</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }}
+            />
+          </Card>
+        )}
+
+        <Card style={styles.transactionsCard}>
+          <Text style={styles.sectionTitle}>Recent Transactions</Text>
+          <FlatList
+            data={recentTransactions}
+            renderItem={renderTransaction}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+        </Card>
       </View>
     </SafeAreaView>
   );
@@ -113,131 +140,135 @@ const DashboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
+    padding: 16,
+    backgroundColor: '#1e1f1e',
   },
   title: {
-    fontSize: 24,
-    color: '#333',
+    fontSize: 28,
+    color: '#00ea00ff',
     marginBottom: 20,
     textAlign: 'center',
-    fontFamily: 'StackSansHeadline-SemiBold',
+    fontFamily: 'StackSansHeadline-Bold',
   },
-  balanceContainer: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
+  balanceCard: {
+    backgroundColor: '#00ea00ff',
+    marginBottom: 16,
+  },
+  balanceHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 8,
   },
   balanceLabel: {
     fontSize: 16,
-    color: '#666',
-    fontFamily: 'StackSansHeadline-Regular',
+    color: '#1e1f1e',
+    marginLeft: 8,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   balanceAmount: {
-    fontSize: 32,
-    color: '#007bff',
+    fontSize: 36,
+    color: '#1e1f1e',
     fontFamily: 'StackSansHeadline-Bold',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    marginBottom: 16,
+    color: '#00ea00ff',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   actionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
+    justifyContent: 'space-between',
   },
   actionButton: {
-    backgroundColor: '#007bff',
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: '#00ea00ff',
+    padding: 16,
+    borderRadius: 12,
     flex: 1,
-    marginHorizontal: 5,
+    marginHorizontal: 4,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
   },
   actionButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: '#333',
+    color: '#1e1f1e',
+    fontSize: 14,
     fontFamily: 'StackSansHeadline-Medium',
+    marginTop: 4,
   },
-  transactionsList: {
+  transactionsCard: {
     flex: 1,
   },
   transactionItem: {
-    backgroundColor: '#fff',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 5,
+    backgroundColor: '#2a2b2a',
+    padding: 12,
+    marginBottom: 8,
+    borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   transactionText: {
     fontSize: 16,
-    color: '#333',
+    color: '#cccccc',
     fontFamily: 'StackSansHeadline-Regular',
   },
   transactionDate: {
     fontSize: 14,
-    color: '#666',
+    color: '#888888',
     fontFamily: 'StackSansHeadline-Light',
   },
-  noRequestsText: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#666',
-    marginVertical: 20,
-    fontFamily: 'StackSansHeadline-Regular',
-  },
   requestItem: {
-    backgroundColor: '#f9f9f9',
-    padding: 15,
-    marginVertical: 5,
+    backgroundColor: '#2a2b2a',
+    padding: 12,
+    marginVertical: 4,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#333333',
   },
   requestText: {
     fontSize: 16,
-    marginBottom: 5,
+    color: '#cccccc',
+    marginBottom: 4,
     fontFamily: 'StackSansHeadline-Medium',
   },
   requestNote: {
     fontSize: 14,
-    color: '#666',
-    marginBottom: 10,
+    color: '#888888',
+    marginBottom: 8,
     fontFamily: 'StackSansHeadline-Regular',
   },
   requestButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  acceptButton: {
-    backgroundColor: '#4CAF50',
+  button: {
     flex: 1,
-    marginRight: 5,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 6,
     alignItems: 'center',
+  },
+  acceptButton: {
+    backgroundColor: '#00ea00ff',
+    marginRight: 4,
   },
   rejectButton: {
-    backgroundColor: '#f44336',
-    flex: 1,
-    marginLeft: 5,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
+    backgroundColor: '#ff4444',
+    marginLeft: 4,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#1e1f1e',
+    fontSize: 14,
     fontFamily: 'StackSansHeadline-Medium',
   },
 });

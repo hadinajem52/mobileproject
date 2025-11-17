@@ -53,7 +53,7 @@ const TransactionHistoryScreen = ({ navigation }) => {
         style={styles.backButton} 
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={28} color="#007bff" />
+        <Ionicons name="arrow-back" size={28} color="#00ea00ff" />
       </TouchableOpacity>
       <Text style={styles.title}>Transaction History</Text>
       <View style={styles.filterContainer}>
@@ -86,12 +86,12 @@ const TransactionHistoryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#1e1f1e',
   },
   backButton: {
     marginBottom: 15,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#00ea00ff',
   },
   filterContainer: {
     flexDirection: 'row',
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   filterButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00ea00ff',
     padding: 10,
     borderRadius: 5,
     flex: 1,
@@ -116,14 +116,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterButtonText: {
-    color: '#fff',
+    color: '#1e1f1e',
     fontSize: 16,
   },
   transactionsList: {
     flex: 1,
   },
   transactionItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2a2b2a',
     padding: 15,
     marginBottom: 10,
     borderRadius: 5,
@@ -137,16 +137,16 @@ const styles = StyleSheet.create({
   transactionText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#cccccc',
   },
   transactionSubtext: {
     fontSize: 14,
-    color: '#666',
+    color: '#888888',
     marginTop: 5,
   },
   transactionDate: {
     fontSize: 12,
-    color: '#999',
+    color: '#666666',
     marginTop: 5,
   },
   status: {
@@ -156,12 +156,12 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   completed: {
-    backgroundColor: '#28a745',
-    color: '#fff',
+    backgroundColor: '#00ea00ff',
+    color: '#1e1f1e',
   },
   pending: {
-    backgroundColor: '#ffc107',
-    color: '#000',
+    backgroundColor: '#ffff00',
+    color: '#1e1f1e',
   },
   emptyContainer: {
     flex: 1,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: '#666',
+    color: '#cccccc',
     textAlign: 'center',
   },
 });
