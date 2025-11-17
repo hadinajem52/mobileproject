@@ -372,6 +372,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     fontSize: 16,
+    color: 'black',
   },
   button: {
     backgroundColor: '#007bff',
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#333',
+    color: 'black',
   },
   pickerContainer: {
     borderWidth: 1,
