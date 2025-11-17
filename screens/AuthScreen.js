@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
+import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../context/AppContext';
 
 const securityQuestions = [
@@ -195,12 +196,12 @@ const AuthScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        {isAddingAccount && (
+        {(isAddingAccount || (!isLogin && !isRecovering)) && (
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.goBack()}
+            onPress={() => isAddingAccount ? navigation.goBack() : toggleMode()}
           >
-            <Text style={styles.backButtonText}>← Back</Text>
+            <Ionicons name="chevron-back" size={24} color="#00ea00ff" />
           </TouchableOpacity>
         )}
         
@@ -404,11 +405,6 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginBottom: 10,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#00ea00ff',
-    fontFamily: 'StackSansHeadline-Medium',
   },
   title: {
     fontSize: 24,

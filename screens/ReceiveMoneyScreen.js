@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import { useAppContext } from '../context/AppContext';
+import Card from '../components/Card';
 
 const ReceiveMoneyScreen = ({ navigation }) => {
   const { user, requestMoney } = useAppContext();
@@ -79,43 +80,52 @@ const ReceiveMoneyScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
-        <Text style={styles.title}>Receive Money</Text>
-        
-        <View style={styles.idContainer}>
-          <Text style={styles.label}>Your Unique ID:</Text>
-          <Text style={styles.userId}>{userId}</Text>
-          <View style={styles.copyShareButtons}> 
-          <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
-            <Text style={styles.copyButtonText}>Copy</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.copyButton, styles.shareButton]} onPress={shareId}>
-            <Text style={styles.copyButtonText}>Share</Text>
-          </TouchableOpacity>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Receive Money</Text>
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceLabel}>Current Balance</Text>
+            <Text style={styles.balanceAmount}>${user.balance.toFixed(2)}</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.qrContainer}>
-        <Text style={styles.qrLabel}>Your QR Code:</Text>
-        <TouchableOpacity onPress={showQRCode} style={styles.qrWrapper}>
-          <QRCode
-            value={userId}
-            size={150}
-            color="black"
-            backgroundColor="white"
-          />
+        <Card style={styles.idCard}>
+          <Text style={styles.sectionTitle}>Your Unique ID</Text>
+          <Text style={styles.userId}>{userId}</Text>
+          <View style={styles.copyShareButtons}>
+            <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
+              <Ionicons name="copy-outline" size={16} color="#1e1f1e" />
+              <Text style={styles.copyButtonText}>Copy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.copyButton, styles.shareButton]} onPress={shareId}>
+              <Ionicons name="share-outline" size={16} color="#1e1f1e" />
+              <Text style={styles.copyButtonText}>Share</Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
+
+        <Card style={styles.qrCard}>
+          <Text style={styles.sectionTitle}>Your QR Code</Text>
+          <TouchableOpacity onPress={showQRCode} style={styles.qrWrapper}>
+            <QRCode
+              value={userId}
+              size={150}
+              color="black"
+              backgroundColor="white"
+            />
+          </TouchableOpacity>
+          <Text style={styles.qrHint}>Tap to enlarge</Text>
+          <Text style={styles.qrNote}>Tip: Show this QR code on your device screen; the payer must scan it using their app's camera (screenshots or images are not supported for scanning).</Text>
+        </Card>
+
+        <TouchableOpacity style={styles.requestButton} onPress={handleRequestMoney}>
+          <Ionicons name="send-outline" size={20} color="#1e1f1e" />
+          <Text style={styles.requestButtonText}>Request Money</Text>
         </TouchableOpacity>
-        <Text style={styles.qrHint}>Tap to enlarge</Text>
-        <Text style={styles.qrNote}>Tip: Show this QR code on your device screen; the payer must scan it using their app's camera (screenshots or images are not supported for scanning).</Text>
-      </View>
 
-      <TouchableOpacity style={styles.requestButton} onPress={handleRequestMoney}>
-        <Text style={styles.requestButtonText}>Request Money</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.note}>
-        Share your ID or QR code with others to receive money, or request money from specific users.
-      </Text>
+        <Text style={styles.note}>
+          Share your ID or QR code with others to receive money, or request money from specific users.
+        </Text>
 
       <Modal
         visible={showRequestModal}
@@ -181,74 +191,91 @@ const styles = StyleSheet.create({
     backgroundColor: '#1e1f1e',
   },
   container: {
-    flexGrow: 1,
-    padding: 20,
+    flex: 1,
     backgroundColor: '#1e1f1e',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
     color: '#00ea00ff',
     fontFamily: 'StackSansHeadline-SemiBold',
+    flex: 1,
   },
-  idContainer: {
-    backgroundColor: '#2a2b2a',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    alignItems: 'center',
+  balanceContainer: {
+    alignItems: 'flex-end',
   },
-  label: {
-    fontSize: 16,
+  balanceLabel: {
+    fontSize: 12,
     color: '#cccccc',
-    marginBottom: 10,
     fontFamily: 'StackSansHeadline-Regular',
+  },
+  balanceAmount: {
+    fontSize: 16,
+    color: '#00ea00ff',
+    fontFamily: 'StackSansHeadline-Medium',
+  },
+  idCard: {
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: '#ffffff',
+    fontFamily: 'StackSansHeadline-Medium',
+    marginBottom: 12,
   },
   userId: {
     fontSize: 18,
     color: '#00ea00ff',
-    marginBottom: 10,
+    marginBottom: 15,
     fontFamily: 'StackSansHeadline-Bold',
+    textAlign: 'center',
+  },
+  copyShareButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   copyButton: {
     backgroundColor: '#00ea00ff',
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginHorizontal: 8,
   },
   copyButtonText: {
     color: '#1e1f1e',
     fontSize: 16,
     fontFamily: 'StackSansHeadline-Medium',
+    marginLeft: 6,
   },
   shareButton: {
-    backgroundColor: '#00ea00ff',
-    marginLeft: 10,
+    // No additional styles needed
   },
-  copyShareButtons: {
-    flexDirection: 'row'
-  },
-  qrContainer: {
-    backgroundColor: '#2a2b2a',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  qrLabel: {
-    fontSize: 16,
-    color: '#cccccc',
-    marginBottom: 15,
-    fontFamily: 'StackSansHeadline-Regular',
+  qrCard: {
+    marginHorizontal: 20,
+    marginTop: 16,
   },
   qrWrapper: {
     padding: 10,
     backgroundColor: '#2a2b2a',
     borderRadius: 10,
+    alignSelf: 'center',
   },
   qrHint: {
     fontSize: 14,
     color: '#888888',
     marginTop: 10,
+    textAlign: 'center',
     fontFamily: 'StackSansHeadline-Light',
   },
   qrNote: {
@@ -260,20 +287,27 @@ const styles = StyleSheet.create({
   },
   requestButton: {
     backgroundColor: '#00ea00ff',
-    padding: 15,
-    borderRadius: 5,
+    marginHorizontal: 20,
+    marginTop: 24,
+    marginBottom: 32,
+    padding: 16,
+    borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   requestButtonText: {
     color: '#1e1f1e',
     fontSize: 18,
     fontFamily: 'StackSansHeadline-Medium',
+    marginLeft: 8,
   },
   note: {
     textAlign: 'center',
     color: '#cccccc',
     fontSize: 14,
+    marginHorizontal: 20,
+    marginBottom: 20,
     fontFamily: 'StackSansHeadline-Regular',
   },
   modalOverlay: {
@@ -301,7 +335,7 @@ const styles = StyleSheet.create({
     borderColor: '#333333',
     padding: 15,
     marginBottom: 15,
-    borderRadius: 5,
+    borderRadius: 8,
     backgroundColor: '#2a2b2a',
     fontSize: 16,
     color: '#cccccc',
