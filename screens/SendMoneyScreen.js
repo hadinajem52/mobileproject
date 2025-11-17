@@ -118,15 +118,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   instruction: {
     fontSize: 14,
     color: '#666',
     marginBottom: 15,
     lineHeight: 20,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   input: {
     borderWidth: 1,
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     fontSize: 16,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   inputRow: {
     flex: 1,
@@ -156,14 +158,14 @@ const styles = StyleSheet.create({
   },
   scanButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   scannedBadge: {
     color: '#007bff',
-    fontWeight: '600',
     marginTop: 8,
     marginBottom: 12,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   messageInput: {
     height: 80,
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
 });
 

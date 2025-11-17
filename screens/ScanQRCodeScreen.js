@@ -72,12 +72,12 @@ const ScanQRCodeScreen = ({ navigation }) => {
 
   if (hasPermission === null) {
     return (
-      <View style={styles.container}><Text>Requesting camera permission...</Text></View>
+      <View style={styles.container}><Text style={{ fontFamily: 'StackSansHeadline-Regular' }}>Requesting camera permission...</Text></View>
     );
   }
   if (hasPermission === false) {
     return (
-      <View style={styles.container}><Text>No access to camera. Please enable camera permissions in device settings.</Text></View>
+      <View style={styles.container}><Text style={{ fontFamily: 'StackSansHeadline-Regular' }}>No access to camera. Please enable camera permissions in device settings.</Text></View>
     );
   }
 
@@ -85,7 +85,7 @@ const ScanQRCodeScreen = ({ navigation }) => {
   if (!isValidCameraComponent) {
     return (
       <View style={styles.container}>
-        <Text style={{ color: '#333', textAlign: 'center' }}>
+        <Text style={{ color: '#333', textAlign: 'center', fontFamily: 'StackSansHeadline-Regular' }}>
           Camera module is not available. It seems the `expo-camera` import didn't provide a React component. Please ensure `expo-camera` is installed and linked correctly (run `npx expo install expo-camera`).
         </Text>
       </View>
@@ -152,14 +152,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   instruction: {
     fontSize: 14,
     color: '#666',
     marginBottom: 10,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   scannerContainer: {
     width: '100%',
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   cancelText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   }
   ,
   toggleRow: {

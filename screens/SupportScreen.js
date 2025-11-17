@@ -110,16 +110,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   input: {
     borderWidth: 1,
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     fontSize: 16,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   messageInput: {
     height: 100,
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   faqItem: {
     backgroundColor: '#fff',
@@ -154,18 +155,20 @@ const styles = StyleSheet.create({
   },
   faqQuestion: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#333',
     marginBottom: 5,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   faqAnswer: {
     fontSize: 14,
     color: '#666',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   contactInfo: {
     fontSize: 16,
     color: '#333',
     marginBottom: 5,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   linkButton: {
     backgroundColor: '#6c757d',
@@ -177,6 +180,7 @@ const styles = StyleSheet.create({
   linkButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: 'StackSansHeadline-Medium',
   },
 });
 

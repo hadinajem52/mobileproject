@@ -122,10 +122,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
     textAlign: 'center',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   balanceContainer: {
     backgroundColor: '#fff',
@@ -137,11 +137,12 @@ const styles = StyleSheet.create({
   balanceLabel: {
     fontSize: 16,
     color: '#666',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   balanceAmount: {
     fontSize: 32,
-    fontWeight: 'bold',
     color: '#007bff',
+    fontFamily: 'StackSansHeadline-Bold',
   },
   actionsContainer: {
     flexDirection: 'row',
@@ -163,9 +164,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   transactionsList: {
     flex: 1,
@@ -181,16 +182,19 @@ const styles = StyleSheet.create({
   transactionText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   transactionDate: {
     fontSize: 14,
     color: '#666',
+    fontFamily: 'StackSansHeadline-Light',
   },
   noRequestsText: {
     textAlign: 'center',
     fontSize: 16,
     color: '#666',
     marginVertical: 20,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   requestItem: {
     backgroundColor: '#f9f9f9',
@@ -202,13 +206,14 @@ const styles = StyleSheet.create({
   },
   requestText: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 5,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   requestNote: {
     fontSize: 14,
     color: '#666',
     marginBottom: 10,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   requestButtons: {
     flexDirection: 'row',
@@ -233,7 +238,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
 });
 

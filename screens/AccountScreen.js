@@ -210,10 +210,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
     textAlign: 'center',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   userInfo: {
     backgroundColor: '#fff',
@@ -241,17 +241,18 @@ const styles = StyleSheet.create({
   avatarText: {
     color: '#fff',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Bold',
   },
   userName: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#333',
     marginBottom: 2,
+    fontFamily: 'StackSansHeadline-Bold',
   },
   userEmail: {
     fontSize: 14,
     color: '#666',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   addAccountButton: {
     backgroundColor: '#fff',
@@ -265,8 +266,8 @@ const styles = StyleSheet.create({
   addAccountText: {
     color: '#007bff',
     fontSize: 16,
-    fontWeight: '600',
     marginLeft: 8,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   optionsContainer: {
     marginTop: 10,
@@ -283,8 +284,8 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
     marginLeft: 8,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   logoutButton: {
     backgroundColor: '#dc3545',
@@ -292,8 +293,8 @@ const styles = StyleSheet.create({
   logoutText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
     marginLeft: 8,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   modalOverlay: {
     flex: 1,
@@ -320,8 +321,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   modalCloseButton: {
     padding: 5,
@@ -361,17 +362,18 @@ const styles = StyleSheet.create({
   accountAvatarText: {
     color: '#fff',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Bold',
   },
   accountName: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#333',
     marginBottom: 2,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   accountEmail: {
     fontSize: 13,
     color: '#666',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   logoutAccountButton: {
     position: 'absolute',
@@ -391,8 +393,8 @@ const styles = StyleSheet.create({
   addAccountTextModal: {
     color: '#007bff',
     fontSize: 16,
-    fontWeight: '600',
     marginLeft: 8,
+    fontFamily: 'StackSansHeadline-Medium',
   },
 });
 

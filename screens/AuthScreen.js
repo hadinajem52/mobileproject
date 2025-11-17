@@ -408,14 +408,14 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     color: '#007bff',
-    fontWeight: '600',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   subtitle: {
     fontSize: 14,
@@ -423,6 +423,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#666',
     paddingHorizontal: 20,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   input: {
     borderWidth: 1,
@@ -433,6 +434,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 16,
     color: 'black',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   button: {
     backgroundColor: '#007bff',
@@ -444,24 +446,26 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   switchText: {
     textAlign: 'center',
     color: '#007bff',
     fontSize: 16,
     marginBottom: 10,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   recoverText: {
     textAlign: 'center',
     color: '#dc3545',
     fontSize: 16,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 5,
     color: 'black',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   pickerContainer: {
     borderWidth: 1,

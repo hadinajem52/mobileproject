@@ -187,9 +187,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   idContainer: {
     backgroundColor: '#fff',
@@ -202,12 +202,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginBottom: 10,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   userId: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#007bff',
     marginBottom: 10,
+    fontFamily: 'StackSansHeadline-Bold',
   },
   copyButton: {
     backgroundColor: '#28a745',
@@ -217,6 +218,7 @@ const styles = StyleSheet.create({
   copyButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: 'StackSansHeadline-Medium',
   },
   shareButton: {
     backgroundColor: '#007bff',
@@ -236,6 +238,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginBottom: 15,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   qrWrapper: {
     padding: 10,
@@ -246,12 +249,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999',
     marginTop: 10,
+    fontFamily: 'StackSansHeadline-Light',
   },
   qrNote: {
     fontSize: 13,
     color: '#555',
     marginTop: 8,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   requestButton: {
     backgroundColor: '#007bff',
@@ -263,12 +268,13 @@ const styles = StyleSheet.create({
   requestButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   note: {
     textAlign: 'center',
     color: '#666',
     fontSize: 14,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   modalOverlay: {
     flex: 1,
@@ -285,10 +291,10 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   input: {
     borderWidth: 1,
@@ -298,6 +304,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     fontSize: 16,
+    fontFamily: 'StackSansHeadline-Regular',
   },
   messageInput: {
     height: 80,
@@ -320,7 +327,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
   submitButton: {
     backgroundColor: '#007bff',
@@ -328,7 +335,7 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
 });
 

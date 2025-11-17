@@ -34,15 +34,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
+    fontFamily: 'StackSansHeadline-SemiBold',
   },
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 30,
     color: '#666',
+    fontFamily: 'StackSansHeadline-Regular',
   },
   button: {
     backgroundColor: '#007bff',
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'StackSansHeadline-Medium',
   },
 });
 

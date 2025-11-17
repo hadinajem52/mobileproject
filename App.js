@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { loadAsync } from 'expo-font';
 import { AppProvider, useAppContext } from './context/AppContext';
 
 import HomeScreen from './screens/HomeScreen';
@@ -89,7 +90,7 @@ function AppNavigator() {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
-        <Text style={{ fontSize: 18, color: '#333' }}>Loading...</Text>
+        <Text style={{ fontSize: 18, color: '#333', fontFamily: 'StackSansHeadline-Regular' }}>Loading...</Text>
       </View>
     );
   }
@@ -146,6 +147,25 @@ function AppNavigator() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const loadFonts = async () => {
+      try {
+        await loadAsync({
+          'StackSansHeadline-Regular': require('./assets/fonts/StackSansHeadline-Regular.ttf'),
+          'StackSansHeadline-Medium': require('./assets/fonts/StackSansHeadline-Medium.ttf'),
+          'StackSansHeadline-SemiBold': require('./assets/fonts/StackSansHeadline-SemiBold.ttf'),
+          'StackSansHeadline-Bold': require('./assets/fonts/StackSansHeadline-Bold.ttf'),
+          'StackSansHeadline-Light': require('./assets/fonts/StackSansHeadline-Light.ttf'),
+          'StackSansHeadline-ExtraLight': require('./assets/fonts/StackSansHeadline-ExtraLight.ttf'),
+        });
+        console.log('Fonts loaded successfully');
+      } catch (error) {
+        console.error('Error loading fonts:', error);
+      }
+    };
+    loadFonts();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
