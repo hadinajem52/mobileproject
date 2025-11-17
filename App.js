@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Animated } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -21,11 +21,36 @@ import ScanQRCodeScreen from './screens/ScanQRCodeScreen';
 import AccountScreen from './screens/AccountScreen';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
+
+const customCardStyleInterpolator = ({ current, next, inverted, layouts }) => {
+  const translateX = Animated.multiply(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [layouts.screen.width, 0],
+      extrapolate: 'clamp',
+    }),
+    inverted
+  );
+
+  const opacity = current.progress.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 0.5, 1],
+    extrapolate: 'clamp',
+  });
+
+  return {
+    cardStyle: {
+      transform: [{ translateX }],
+      opacity,
+    },
+  };
+};
 
 function MainTabNavigator() {
   return (
     <Tab.Navigator
+      tabBarPosition="bottom"
       screenOptions={{
         tabBarActiveTintColor: '#00ff00',
         tabBarInactiveTintColor: '#cccccc',
@@ -35,10 +60,14 @@ function MainTabNavigator() {
           borderTopWidth: 1,
           paddingBottom: 5,
           paddingTop: 5,
-          height: 60,
+          height: 70,
         },
         tabBarLabelStyle: {
           fontFamily: 'StackSansHeadline-Medium',
+          fontSize: 12,
+        },
+        tabBarIndicatorStyle: {
+          display: 'none',
         },
         headerShown: false,
       }}
@@ -103,7 +132,7 @@ function AppNavigator() {
       <Stack.Navigator 
         screenOptions={{ 
           headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          cardStyleInterpolator: customCardStyleInterpolator,
           gestureEnabled: true,
           gestureDirection: 'horizontal',
         }}

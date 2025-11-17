@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,10 @@ import { useAppContext } from '../context/AppContext';
 
 const TransactionHistoryScreen = ({ navigation }) => {
   const { user, getUserTransactions, findUserById } = useAppContext();
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState('All');
 
-  const transactions = getUserTransactions(user?.id || '').map(txn => {
+  const allTransactions = getUserTransactions(user?.id || '').map(txn => {
     const isSent = txn.senderId === user?.id;
     const otherUserId = isSent ? txn.recipientId : txn.senderId;
     const otherUser = findUserById(otherUserId);
@@ -24,10 +26,33 @@ const TransactionHistoryScreen = ({ navigation }) => {
       amount: isSent ? -txn.amount : txn.amount,
       recipient: isSent ? otherUser?.name : null,
       sender: !isSent ? otherUser?.name : null,
-      date: new Date(txn.date).toISOString().split('T')[0],
+      date: new Date(txn.date),
       status: txn.status,
     };
   });
+
+  const getFilteredTransactions = () => {
+    let filtered = allTransactions;
+
+    // Type filter
+    if (typeFilter !== 'All') {
+      filtered = filtered.filter(txn => txn.type === typeFilter);
+    }
+
+    // Date filter
+    const now = new Date();
+    if (dateFilter === 'Last 7 days') {
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(txn => txn.date >= sevenDaysAgo);
+    } else if (dateFilter === 'Last 30 days') {
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(txn => txn.date >= thirtyDaysAgo);
+    }
+
+    return filtered.sort((a, b) => b.date - a.date); // Sort by date descending
+  };
+
+  const transactions = getFilteredTransactions();
 
   const renderTransaction = ({ item }) => (
     <View style={styles.transactionItem}>
@@ -38,7 +63,7 @@ const TransactionHistoryScreen = ({ navigation }) => {
         <Text style={styles.transactionSubtext}>
           {item.type === 'Sent' ? `To: ${item.recipient}` : `From: ${item.sender}`}
         </Text>
-        <Text style={styles.transactionDate}>{item.date}</Text>
+        <Text style={styles.transactionDate}>{item.date.toLocaleDateString()}</Text>
       </View>
       <Text style={[styles.status, item.status === 'Completed' ? styles.completed : styles.pending]}>
         {item.status}
@@ -57,15 +82,48 @@ const TransactionHistoryScreen = ({ navigation }) => {
       </TouchableOpacity>
       <Text style={styles.title}>Transaction History</Text>
       <View style={styles.filterContainer}>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>Sent</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>Received</Text>
-        </TouchableOpacity>
+        <Text style={styles.filterTitle}>Type:</Text>
+        <View style={styles.filterRow}>
+          <TouchableOpacity 
+            style={[styles.filterButton, typeFilter === 'All' && styles.filterButtonActive]} 
+            onPress={() => setTypeFilter('All')}
+          >
+            <Text style={[styles.filterButtonText, typeFilter === 'All' && styles.filterButtonTextActive]}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, typeFilter === 'Sent' && styles.filterButtonActive]} 
+            onPress={() => setTypeFilter('Sent')}
+          >
+            <Text style={[styles.filterButtonText, typeFilter === 'Sent' && styles.filterButtonTextActive]}>Sent</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, typeFilter === 'Received' && styles.filterButtonActive]} 
+            onPress={() => setTypeFilter('Received')}
+          >
+            <Text style={[styles.filterButtonText, typeFilter === 'Received' && styles.filterButtonTextActive]}>Received</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.filterTitle}>Date:</Text>
+        <View style={styles.filterRow}>
+          <TouchableOpacity 
+            style={[styles.filterButton, dateFilter === 'All' && styles.filterButtonActive]} 
+            onPress={() => setDateFilter('All')}
+          >
+            <Text style={[styles.filterButtonText, dateFilter === 'All' && styles.filterButtonTextActive]}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, dateFilter === 'Last 7 days' && styles.filterButtonActive]} 
+            onPress={() => setDateFilter('Last 7 days')}
+          >
+            <Text style={[styles.filterButtonText, dateFilter === 'Last 7 days' && styles.filterButtonTextActive]}>7 Days</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.filterButton, dateFilter === 'Last 30 days' && styles.filterButtonActive]} 
+            onPress={() => setDateFilter('Last 30 days')}
+          >
+            <Text style={[styles.filterButtonText, dateFilter === 'Last 30 days' && styles.filterButtonTextActive]}>30 Days</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <FlatList
         data={transactions}
@@ -103,21 +161,36 @@ const styles = StyleSheet.create({
     color: '#00ea00ff',
   },
   filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     marginBottom: 20,
   },
+  filterTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#cccccc',
+    marginBottom: 10,
+  },
+  filterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 15,
+  },
   filterButton: {
-    backgroundColor: '#00ea00ff',
+    backgroundColor: '#2a2b2a',
     padding: 10,
     borderRadius: 5,
     flex: 1,
     marginHorizontal: 5,
     alignItems: 'center',
   },
+  filterButtonActive: {
+    backgroundColor: '#00ea00ff',
+  },
   filterButtonText: {
+    color: '#cccccc',
+    fontSize: 14,
+  },
+  filterButtonTextActive: {
     color: '#1e1f1e',
-    fontSize: 16,
   },
   transactionsList: {
     flex: 1,

@@ -81,9 +81,9 @@ const DashboardScreen = ({ navigation }) => {
               <Ionicons name="download" size={24} color="#000000ff" />
               <Text style={styles.actionButtonText}>Receive</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('ScanQRCode')}>
-              <Ionicons name="qr-code" size={24} color="#000000ff" />
-              <Text style={styles.actionButtonText}>Scan</Text>
+            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('TransactionHistory')}>
+              <Ionicons name="list" size={24} color="#000000ff" />
+              <Text style={styles.actionButtonText}>History</Text>
             </TouchableOpacity>
           </View>
         </Card>
