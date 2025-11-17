@@ -104,7 +104,7 @@ const ScanQRCodeScreen = ({ navigation }) => {
         
         <Text style={styles.title}>Scan QR Code</Text>
         <Text style={styles.instruction}>
-          This scanner only accepts QR codes from the camera. Uploading or selecting screenshots or images from your gallery is not supported.
+          Only accepts a QR code containing a valid user ID. Align the QR code within the frame to scan.  
         </Text>
         
         <View style={styles.scannerContainer}>
