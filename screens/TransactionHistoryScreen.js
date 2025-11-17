@@ -72,6 +72,11 @@ const TransactionHistoryScreen = ({ navigation }) => {
         renderItem={renderTransaction}
         keyExtractor={(item) => item.id}
         style={styles.transactionsList}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No transactions yet</Text>
+          </View>
+        }
       />
       </View>
     </SafeAreaView>
@@ -157,6 +162,17 @@ const styles = StyleSheet.create({
   pending: {
     backgroundColor: '#ffc107',
     color: '#000',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 50,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#666',
+    textAlign: 'center',
   },
 });
 
