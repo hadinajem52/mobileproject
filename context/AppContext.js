@@ -7,6 +7,8 @@ export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [accounts, setAccounts] = useState([]); // Array of logged-in user objects
+  const [activeAccountId, setActiveAccountId] = useState(null); // ID of current active account
   const [registeredUsers, setRegisteredUsers] = useState([]);
   const [allTransactions, setAllTransactions] = useState([]);
   const [moneyRequests, setMoneyRequests] = useState([]);
@@ -16,13 +18,67 @@ export const AppProvider = ({ children }) => {
     loadData();
   }, []);
 
+  // Sync accounts with latest data from registeredUsers
+  useEffect(() => {
+    if (accounts.length > 0 && registeredUsers.length > 0) {
+      const updatedAccounts = accounts.map(account => {
+        const latestData = registeredUsers.find(u => u.id === account.id);
+        return latestData || account;
+      });
+      
+      // Check if any account data changed
+      const hasChanges = updatedAccounts.some((acc, index) => 
+        JSON.stringify(acc) !== JSON.stringify(accounts[index])
+      );
+      
+      if (hasChanges) {
+        setAccounts(updatedAccounts);
+        
+        // Update current user if active
+        if (activeAccountId) {
+          const activeAccount = updatedAccounts.find(acc => acc.id === activeAccountId);
+          if (activeAccount && JSON.stringify(activeAccount) !== JSON.stringify(user)) {
+            setUser(activeAccount);
+          }
+        }
+      }
+    }
+  }, [registeredUsers]);
+
   const loadData = async () => {
     try {
       const userData = await AsyncStorage.getItem('user');
+      const accountsData = await AsyncStorage.getItem('accounts');
+      const activeAccountIdData = await AsyncStorage.getItem('activeAccountId');
       const usersData = await AsyncStorage.getItem('registeredUsers');
       const transactionsData = await AsyncStorage.getItem('allTransactions');
       const requestsData = await AsyncStorage.getItem('moneyRequests');
-      if (userData) setUser(JSON.parse(userData));
+      
+      if (accountsData) {
+        const parsedAccounts = JSON.parse(accountsData);
+        setAccounts(parsedAccounts);
+        
+        // Set active account
+        if (activeAccountIdData) {
+          const activeId = JSON.parse(activeAccountIdData);
+          setActiveAccountId(activeId);
+          const activeAccount = parsedAccounts.find(acc => acc.id === activeId);
+          if (activeAccount) {
+            setUser(activeAccount);
+          }
+        } else if (parsedAccounts.length > 0) {
+          // If no active account set, use the first one
+          setUser(parsedAccounts[0]);
+          setActiveAccountId(parsedAccounts[0].id);
+        }
+      } else if (userData) {
+        // Migration: if old single user exists, migrate to accounts array
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+        setAccounts([parsedUser]);
+        setActiveAccountId(parsedUser.id);
+      }
+      
       if (usersData) setRegisteredUsers(JSON.parse(usersData));
       if (transactionsData) setAllTransactions(JSON.parse(transactionsData));
       if (requestsData) setMoneyRequests(JSON.parse(requestsData));
@@ -35,7 +91,10 @@ export const AppProvider = ({ children }) => {
 
   const saveData = async () => {
     try {
-      if (user) await AsyncStorage.setItem('user', JSON.stringify(user));
+      await AsyncStorage.setItem('accounts', JSON.stringify(accounts));
+      if (activeAccountId) {
+        await AsyncStorage.setItem('activeAccountId', JSON.stringify(activeAccountId));
+      }
       await AsyncStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
       await AsyncStorage.setItem('allTransactions', JSON.stringify(allTransactions));
       await AsyncStorage.setItem('moneyRequests', JSON.stringify(moneyRequests));
@@ -60,18 +119,122 @@ export const AppProvider = ({ children }) => {
     };
     const newUsers = [...registeredUsers, newUser];
     setRegisteredUsers(newUsers);
-    saveData();
+    // Save data asynchronously after state update
+    setTimeout(() => {
+      AsyncStorage.setItem('registeredUsers', JSON.stringify(newUsers));
+    }, 0);
     return newUser;
   };
 
   const login = (email, password) => {
     const foundUser = registeredUsers.find(u => u.email === email && u.password === password);
     if (foundUser) {
-      setUser(foundUser);
-      saveData();
+      // Check if account is already logged in
+      const existingAccount = accounts.find(acc => acc.id === foundUser.id);
+      if (!existingAccount) {
+        // Add to accounts array
+        const newAccounts = [...accounts, foundUser];
+        setAccounts(newAccounts);
+        setActiveAccountId(foundUser.id);
+        setUser(foundUser);
+        // Save data asynchronously after state update
+        setTimeout(() => {
+          AsyncStorage.setItem('accounts', JSON.stringify(newAccounts));
+          AsyncStorage.setItem('activeAccountId', JSON.stringify(foundUser.id));
+        }, 0);
+      } else {
+        // Just switch to existing account
+        setActiveAccountId(foundUser.id);
+        setUser(foundUser);
+        setTimeout(() => {
+          AsyncStorage.setItem('activeAccountId', JSON.stringify(foundUser.id));
+        }, 0);
+      }
       return true;
     }
     return false;
+  };
+
+  const addAccount = (email, password) => {
+    const foundUser = registeredUsers.find(u => u.email === email && u.password === password);
+    if (foundUser) {
+      // Check if account is already logged in
+      const existingAccount = accounts.find(acc => acc.id === foundUser.id);
+      if (existingAccount) {
+        return { success: false, message: 'Account is already added' };
+      }
+      
+      // Add to accounts array
+      const newAccounts = [...accounts, foundUser];
+      setAccounts(newAccounts);
+      setActiveAccountId(foundUser.id);
+      setUser(foundUser);
+      // Save data asynchronously after state update
+      setTimeout(() => {
+        AsyncStorage.setItem('accounts', JSON.stringify(newAccounts));
+        AsyncStorage.setItem('activeAccountId', JSON.stringify(foundUser.id));
+      }, 0);
+      return { success: true };
+    }
+    return { success: false, message: 'Invalid email or password' };
+  };
+
+  const switchAccount = (accountId) => {
+    const account = accounts.find(acc => acc.id === accountId);
+    if (account) {
+      // Get the latest data for the account from registeredUsers
+      const latestAccountData = registeredUsers.find(u => u.id === accountId);
+      if (latestAccountData) {
+        // Update the account in accounts array with latest data
+        const updatedAccounts = accounts.map(acc => 
+          acc.id === accountId ? latestAccountData : acc
+        );
+        setAccounts(updatedAccounts);
+        setUser(latestAccountData);
+        setActiveAccountId(accountId);
+        setTimeout(() => {
+          AsyncStorage.setItem('accounts', JSON.stringify(updatedAccounts));
+          AsyncStorage.setItem('activeAccountId', JSON.stringify(accountId));
+        }, 0);
+        return true;
+      }
+      setUser(account);
+      setActiveAccountId(accountId);
+      setTimeout(() => {
+        AsyncStorage.setItem('activeAccountId', JSON.stringify(accountId));
+      }, 0);
+      return true;
+    }
+    return false;
+  };
+
+  const removeAccount = (accountId) => {
+    const updatedAccounts = accounts.filter(acc => acc.id !== accountId);
+    setAccounts(updatedAccounts);
+    
+    if (activeAccountId === accountId) {
+      // If removing active account, switch to another or logout
+      if (updatedAccounts.length > 0) {
+        const newActiveAccount = updatedAccounts[0];
+        setUser(newActiveAccount);
+        setActiveAccountId(newActiveAccount.id);
+        setTimeout(() => {
+          AsyncStorage.setItem('accounts', JSON.stringify(updatedAccounts));
+          AsyncStorage.setItem('activeAccountId', JSON.stringify(newActiveAccount.id));
+        }, 0);
+      } else {
+        setUser(null);
+        setActiveAccountId(null);
+        setTimeout(() => {
+          AsyncStorage.setItem('accounts', JSON.stringify([]));
+          AsyncStorage.removeItem('activeAccountId');
+        }, 0);
+      }
+    } else {
+      setTimeout(() => {
+        AsyncStorage.setItem('accounts', JSON.stringify(updatedAccounts));
+      }, 0);
+    }
   };
 
   const verifySecurityAnswers = (email, answer) => {
@@ -113,12 +276,17 @@ export const AppProvider = ({ children }) => {
 
     if (sender.balance < amount) return { success: false, message: 'Insufficient balance' };
 
-  // Only allow sending by exact user ID (scan / copy of unique ID)
-  const recipient = findUserById(recipientIdentifier);
+    // Only allow sending by exact user ID (scan / copy of unique ID)
+    const trimmedRecipientId = recipientIdentifier.trim();
+    const recipient = findUserById(trimmedRecipientId);
 
-  if (!recipient) return { success: false, message: 'Recipient not found. Sending is only allowed using the recipient\'s unique ID (scan their QR).' };
+    if (!recipient) {
+      console.log('Recipient not found:', trimmedRecipientId);
+      console.log('Available users:', registeredUsers.map(u => ({ id: u.id, name: u.name })));
+      return { success: false, message: 'Recipient not found. Sending is only allowed using the recipient\'s unique ID (scan their QR).' };
+    }
 
-  if (sender.id === recipient.id) return { success: false, message: 'Cannot send money to yourself' };
+    if (sender.id === recipient.id) return { success: false, message: 'Cannot send money to yourself' };
 
     console.log('Sending money from:', sender.name, 'balance:', sender.balance, 'to:', recipient.name, 'balance:', recipient.balance, 'amount:', amount);
 
@@ -237,18 +405,32 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setAccounts([]);
+    setActiveAccountId(null);
     AsyncStorage.removeItem('user');
+    AsyncStorage.removeItem('accounts');
+    AsyncStorage.removeItem('activeAccountId');
+  };
+
+  const logoutAccount = (accountId) => {
+    removeAccount(accountId);
   };
 
   return (
     <AppContext.Provider value={{
       user,
+      accounts,
+      activeAccountId,
       registeredUsers,
       allTransactions,
       moneyRequests,
       isLoading,
       registerUser,
       login,
+      addAccount,
+      switchAccount,
+      removeAccount,
+      logoutAccount,
       verifySecurityAnswers,
       updatePassword,
       getSecurityQuestion,

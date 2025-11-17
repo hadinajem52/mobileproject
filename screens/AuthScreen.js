@@ -21,8 +21,9 @@ const securityQuestions = [
   "What was your childhood nickname?"
 ];
 
-const AuthScreen = ({ navigation }) => {
-  const { registerUser, login, verifySecurityAnswers, updatePassword, getSecurityQuestion } = useAppContext();
+const AuthScreen = ({ navigation, route }) => {
+  const { registerUser, login, addAccount, verifySecurityAnswers, updatePassword, getSecurityQuestion } = useAppContext();
+  const isAddingAccount = route?.params?.isAddingAccount || false;
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovering, setIsRecovering] = useState(false);
   const [recoveryStep, setRecoveryStep] = useState(0);
@@ -58,12 +59,28 @@ const AuthScreen = ({ navigation }) => {
     }
 
     const trimmedEmail = email.trim();
-    const success = login(trimmedEmail, password);
-    if (success) {
-      // Navigation will happen automatically when user state changes
-      // No need to manually navigate
+    
+    if (isAddingAccount) {
+      // Adding account mode
+      const result = addAccount(trimmedEmail, password);
+      if (result.success) {
+        Alert.alert('Success', 'Account added successfully!', [
+          {
+            text: 'OK',
+            onPress: () => navigation.goBack(),
+          },
+        ]);
+      } else {
+        Alert.alert('Error', result.message);
+      }
     } else {
-      Alert.alert('Error', 'Invalid email or password');
+      // Normal login mode
+      const success = login(trimmedEmail, password);
+      if (success) {
+        // Navigation will happen automatically when user state changes
+      } else {
+        Alert.alert('Error', 'Invalid email or password');
+      }
     }
   };
 
@@ -95,8 +112,9 @@ const AuthScreen = ({ navigation }) => {
     registerUser(userData);
     Alert.alert('Success', 'Account created successfully! Please login.');
     setIsLogin(true);
-    setEmail('');
-    setPassword('');
+    // Keep email and password so user can login immediately
+    // setEmail('');
+    // setPassword('');
     setName('');
     setPhone('');
     setSecurityQ(securityQuestions[0]);
@@ -177,9 +195,28 @@ const AuthScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
+        {isAddingAccount && (
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+        )}
+        
         <Text style={styles.title}>
-          {isRecovering ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password') : isLogin ? 'Login' : 'Sign Up'}
+          {isAddingAccount 
+            ? 'Add Account' 
+            : isRecovering 
+              ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password') 
+              : isLogin ? 'Login' : 'Sign Up'}
         </Text>
+
+        {isAddingAccount && isLogin && (
+          <Text style={styles.subtitle}>
+            Log in to another account to switch between them seamlessly.
+          </Text>
+        )}
 
       {!isRecovering && (
         <>
@@ -316,11 +353,11 @@ const AuthScreen = ({ navigation }) => {
 
       <TouchableOpacity style={styles.button} onPress={handleAuth}>
         <Text style={styles.buttonText}>
-          {isRecovering ? (recoveryStep === 0 ? 'Next' : recoveryStep === 1 ? 'Verify Answer' : 'Update Password') : isLogin ? 'Login' : 'Sign Up'}
+          {isRecovering ? (recoveryStep === 0 ? 'Next' : recoveryStep === 1 ? 'Verify Answer' : 'Update Password') : isLogin ? (isAddingAccount ? 'Add Account' : 'Login') : 'Sign Up'}
         </Text>
       </TouchableOpacity>
 
-      {!isRecovering && (
+      {!isRecovering && !isAddingAccount && (
         <TouchableOpacity onPress={toggleMode}>
           <Text style={styles.switchText}>
             {isLogin ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
@@ -328,7 +365,7 @@ const AuthScreen = ({ navigation }) => {
         </TouchableOpacity>
       )}
 
-      {isLogin && !isRecovering && (
+      {isLogin && !isRecovering && !isAddingAccount && (
         <TouchableOpacity onPress={() => setIsRecovering(true)}>
           <Text style={styles.recoverText}>Forgot Password?</Text>
         </TouchableOpacity>
@@ -365,12 +402,27 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f5f5f5',
   },
+  backButton: {
+    marginBottom: 10,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007bff',
+    fontWeight: '600',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     color: '#333',
+  },
+  subtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#666',
+    paddingHorizontal: 20,
   },
   input: {
     borderWidth: 1,

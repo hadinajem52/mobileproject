@@ -63,8 +63,11 @@ const ScanQRCodeScreen = ({ navigation }) => {
       return;
     }
 
-    // Navigate back to SendMoney screen and pass the scanned recipient ID.
-    navigation.navigate('SendMoney', { recipientFromQR: trimmed });
+    // Navigate back to MainTabs and then to SendMoney screen with the scanned recipient ID.
+    navigation.navigate('MainTabs', { 
+      screen: 'SendMoney', 
+      params: { recipientFromQR: trimmed } 
+    });
   };
 
   if (hasPermission === null) {
@@ -93,44 +96,50 @@ const ScanQRCodeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <TouchableOpacity 
-        style={styles.backButton} 
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back" size={28} color="#007bff" />
-      </TouchableOpacity>
-      <Text style={styles.title}>Scan QR Code</Text>
-      <Text style={styles.instruction}>
-        This scanner only accepts QR codes from the camera. Uploading or selecting screenshots or images from your gallery is not supported.
-      </Text>
-      <View style={styles.scannerContainer}>
-        <Camera
-          style={StyleSheet.absoluteFillObject}
-          facing={cameraType}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr"],
-          }}
-          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-        />
-      </View>
-
-      <View style={styles.toggleRow}>
-        <TouchableOpacity style={[styles.cancelButton, styles.toggleButton]} onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')}>
-          <Text style={styles.cancelText}>Flip Camera</Text>
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={28} color="#007bff" />
         </TouchableOpacity>
-      </View>
+        
+        <Text style={styles.title}>Scan QR Code</Text>
+        <Text style={styles.instruction}>
+          This scanner only accepts QR codes from the camera. Uploading or selecting screenshots or images from your gallery is not supported.
+        </Text>
+        
+        <View style={styles.scannerContainer}>
+          <Camera
+            style={StyleSheet.absoluteFillObject}
+            facing={cameraType}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+          />
+        </View>
 
-      <TouchableOpacity
-        style={styles.cancelButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.cancelText}>Cancel</Text>
-      </TouchableOpacity>
+        <View style={styles.toggleRow}>
+          <TouchableOpacity style={[styles.cancelButton, styles.toggleButton]} onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')}>
+            <Text style={styles.cancelText}>Flip Camera</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.cancelText}>Cancel</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 20,

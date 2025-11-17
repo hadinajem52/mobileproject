@@ -80,10 +80,12 @@ const ReceiveMoneyScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>Receive Money</Text>      <View style={styles.idContainer}>
-        <Text style={styles.label}>Your Unique ID:</Text>
-        <Text style={styles.userId}>{userId}</Text>
-        <View style={styles.copyShareButtons}> 
+        <Text style={styles.title}>Receive Money</Text>
+        
+        <View style={styles.idContainer}>
+          <Text style={styles.label}>Your Unique ID:</Text>
+          <Text style={styles.userId}>{userId}</Text>
+          <View style={styles.copyShareButtons}> 
           <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
             <Text style={styles.copyButtonText}>Copy</Text>
           </TouchableOpacity>

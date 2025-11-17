@@ -133,6 +133,10 @@ function AppNavigator() {
               name="Support" 
               component={SupportScreen} 
             />
+            <Stack.Screen 
+              name="Auth" 
+              component={AuthScreen} 
+            />
           </>
         )}
       </Stack.Navigator>
