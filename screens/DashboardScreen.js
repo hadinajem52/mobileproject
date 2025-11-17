@@ -7,6 +7,7 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppContext } from '../context/AppContext';
 
 const DashboardScreen = ({ navigation }) => {
@@ -47,7 +48,8 @@ const DashboardScreen = ({ navigation }) => {
 
   const handleLogout = () => {
     logout();
-    navigation.replace('Home');
+    // Navigation will happen automatically when user state changes
+    // No need to manually navigate
   };
 
   const renderTransaction = ({ item }) => (
@@ -60,8 +62,9 @@ const DashboardScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.header}>
         <Text style={styles.title}>Welcome, {user?.name || 'User'}!</Text>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Logout</Text>
@@ -133,11 +136,16 @@ const DashboardScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         style={styles.transactionsList}
       />
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 20,

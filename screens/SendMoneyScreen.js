@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../context/AppContext';
 
 const SendMoneyScreen = ({ navigation, route }) => {
@@ -49,14 +51,21 @@ const SendMoneyScreen = ({ navigation, route }) => {
       setAmount('');
       setMessage('');
       setScannedFromCamera(false);
-      navigation.goBack();
+      navigation.navigate('Dashboard');
     } else {
       Alert.alert('Error', result.message);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.navigate('Dashboard')}
+      >
+        <Ionicons name="arrow-back" size={28} color="#007bff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Send Money</Text>
       <Text style={styles.instruction}>
         Get the recipient's unique ID from their Receive Money screen (copy or QR), or tap "Scan QR" to scan their QR code using your device camera (screenshots are not supported).
@@ -71,7 +80,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
       />
         <TouchableOpacity
           style={styles.scanButton}
-          onPress={() => navigation.replace('ScanQRCode')}
+          onPress={() => navigation.navigate('ScanQRCode')}
         >
           <Text style={styles.scanButtonText}>Scan QR</Text>
         </TouchableOpacity>
@@ -98,15 +107,23 @@ const SendMoneyScreen = ({ navigation, route }) => {
       <TouchableOpacity style={styles.button} onPress={handleSend}>
         <Text style={styles.buttonText}>Send Money</Text>
       </TouchableOpacity>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
+  },
+  backButton: {
+    marginBottom: 15,
   },
   title: {
     fontSize: 24,

@@ -8,6 +8,8 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 const SupportScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -32,7 +34,14 @@ const SupportScreen = ({ navigation }) => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.navigate('Dashboard')}
+      >
+        <Ionicons name="arrow-back" size={28} color="#007bff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Support & Contact</Text>
       
       <Text style={styles.sectionTitle}>Contact Us</Text>
@@ -81,15 +90,23 @@ const SupportScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.linkButton}>
         <Text style={styles.linkButtonText}>Terms of Service</Text>
       </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  container: {
+    flexGrow: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
+  },
+  backButton: {
+    marginBottom: 15,
   },
   title: {
     fontSize: 24,

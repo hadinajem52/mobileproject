@@ -9,7 +9,10 @@ import {
   Modal,
   Clipboard,
   Share,
+  ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import { useAppContext } from '../context/AppContext';
 
@@ -75,7 +78,14 @@ const ReceiveMoneyScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.navigate('Dashboard')}
+      >
+        <Ionicons name="arrow-back" size={28} color="#007bff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Receive Money</Text>
 
       <View style={styles.idContainer}>
@@ -166,15 +176,23 @@ const ReceiveMoneyScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  container: {
+    flexGrow: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
+  },
+  backButton: {
+    marginBottom: 15,
   },
   title: {
     fontSize: 24,

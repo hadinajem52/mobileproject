@@ -6,6 +6,8 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../context/AppContext';
 
 const TransactionHistoryScreen = ({ navigation }) => {
@@ -45,7 +47,14 @@ const TransactionHistoryScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.navigate('Dashboard')}
+      >
+        <Ionicons name="arrow-back" size={28} color="#007bff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Transaction History</Text>
       <View style={styles.filterContainer}>
         <TouchableOpacity style={styles.filterButton}>
@@ -64,15 +73,23 @@ const TransactionHistoryScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         style={styles.transactionsList}
       />
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
+  },
+  backButton: {
+    marginBottom: 15,
   },
   title: {
     fontSize: 24,

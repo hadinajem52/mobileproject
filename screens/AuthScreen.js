@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { useAppContext } from '../context/AppContext';
 
@@ -59,7 +60,8 @@ const AuthScreen = ({ navigation }) => {
     const trimmedEmail = email.trim();
     const success = login(trimmedEmail, password);
     if (success) {
-      navigation.replace('Dashboard');
+      // Navigation will happen automatically when user state changes
+      // No need to manually navigate
     } else {
       Alert.alert('Error', 'Invalid email or password');
     }
@@ -173,10 +175,11 @@ const AuthScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>
-        {isRecovering ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password') : isLogin ? 'Login' : 'Sign Up'}
-      </Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>
+          {isRecovering ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password') : isLogin ? 'Login' : 'Sign Up'}
+        </Text>
 
       {!isRecovering && (
         <>
@@ -347,11 +350,16 @@ const AuthScreen = ({ navigation }) => {
           <Text style={styles.recoverText}>{recoveryStep === 0 ? 'Back to Login' : 'Back'}</Text>
         </TouchableOpacity>
       )}
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 20,

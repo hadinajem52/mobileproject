@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { CameraView as Camera, useCameraPermissions } from 'expo-camera';
 
 const ScanQRCodeScreen = ({ navigation }) => {
@@ -61,8 +63,8 @@ const ScanQRCodeScreen = ({ navigation }) => {
       return;
     }
 
-    // Navigate back to SendMoney screen and pass the scanned recipient ID. Use replace to avoid going back to scan screen.
-    navigation.replace('SendMoney', { recipientFromQR: trimmed });
+    // Navigate back to SendMoney screen and pass the scanned recipient ID.
+    navigation.navigate('SendMoney', { recipientFromQR: trimmed });
   };
 
   if (hasPermission === null) {
@@ -88,7 +90,14 @@ const ScanQRCodeScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.navigate('SendMoney')}
+      >
+        <Ionicons name="arrow-back" size={28} color="#007bff" />
+      </TouchableOpacity>
       <Text style={styles.title}>Scan QR Code</Text>
       <Text style={styles.instruction}>
         This scanner only accepts QR codes from the camera. Uploading or selecting screenshots or images from your gallery is not supported.
@@ -116,7 +125,8 @@ const ScanQRCodeScreen = ({ navigation }) => {
       >
         <Text style={styles.cancelText}>Cancel</Text>
       </TouchableOpacity>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -126,6 +136,10 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 15,
   },
   title: {
     fontSize: 20,
