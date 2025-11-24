@@ -85,7 +85,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
           <Text style={styles.title}>Receive Money</Text>
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={styles.balanceAmount}>${user.balance.toFixed(2)}</Text>
+            <Text style={styles.balanceAmount}>${(user?.balance || 0).toFixed(2)}</Text>
           </View>
         </View>
 
@@ -127,59 +127,59 @@ const ReceiveMoneyScreen = ({ navigation }) => {
           Share your ID or QR code with others to receive money, or request money from specific users.
         </Text>
 
-      <Modal
-        visible={showRequestModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowRequestModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Request Money</Text>
+        <Modal
+          visible={showRequestModal}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setShowRequestModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Request Money</Text>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Target User ID/Email/Phone"
-              placeholderTextColor="#999"
-              value={targetUser}
-              onChangeText={setTargetUser}
-            />
+              <TextInput
+                style={styles.input}
+                placeholder="Target User ID/Email/Phone"
+                placeholderTextColor="#999"
+                value={targetUser}
+                onChangeText={setTargetUser}
+              />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Amount to Request"
-              placeholderTextColor="#999"
-              value={requestAmount}
-              onChangeText={setRequestAmount}
-              keyboardType="numeric"
-            />
+              <TextInput
+                style={styles.input}
+                placeholder="Amount to Request"
+                placeholderTextColor="#999"
+                value={requestAmount}
+                onChangeText={setRequestAmount}
+                keyboardType="numeric"
+              />
 
-            <TextInput
-              style={[styles.input, styles.messageInput]}
-              placeholder="Optional Message"
-              placeholderTextColor="#999"
-              value={requestMessage}
-              onChangeText={setRequestMessage}
-              multiline
-            />
+              <TextInput
+                style={[styles.input, styles.messageInput]}
+                placeholder="Optional Message"
+                placeholderTextColor="#999"
+                value={requestMessage}
+                onChangeText={setRequestMessage}
+                multiline
+              />
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setShowRequestModal(false)}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.submitButton]}
-                onPress={submitMoneyRequest}
-              >
-                <Text style={styles.submitButtonText}>Send Request</Text>
-              </TouchableOpacity>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setShowRequestModal(false)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.submitButton]}
+                  onPress={submitMoneyRequest}
+                >
+                  <Text style={styles.submitButtonText}>Send Request</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );

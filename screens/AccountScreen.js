@@ -64,7 +64,7 @@ const AccountScreen = ({ navigation }) => {
 
   const handleAddAccount = () => {
     setShowAccountSwitcher(false);
-    navigation.navigate('Auth', { isAddingAccount: true });
+    navigation.navigate('AddAccount', { isAddingAccount: true });
   };
 
   const handleSupport = () => {
@@ -75,9 +75,9 @@ const AccountScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <Text style={styles.title}>Account</Text>
-        
+
         {/* Current User Info */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.userInfo}
           onPress={() => setShowAccountSwitcher(true)}
         >
@@ -99,7 +99,7 @@ const AccountScreen = ({ navigation }) => {
 
         {/* Add Account Button (if only one account) */}
         {accounts.length === 1 && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.addAccountButton}
             onPress={handleAddAccount}
           >
@@ -114,7 +114,7 @@ const AccountScreen = ({ navigation }) => {
             <Ionicons name="help-circle-outline" size={24} color="#000000ff" />
             <Text style={styles.optionText}>Support</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={[styles.optionButton, styles.logoutButton]} onPress={handleLogout}>
             <Ionicons name="log-out-outline" size={24} color="#000000ff" />
             <Text style={styles.logoutText}>Logout All Accounts</Text>
@@ -171,7 +171,7 @@ const AccountScreen = ({ navigation }) => {
                       <Ionicons name="checkmark-circle" size={24} color="#00ea00ff" />
                     )}
                   </TouchableOpacity>
-                  
+
                   {accounts.length > 1 && (
                     <TouchableOpacity
                       style={styles.logoutAccountButton}

@@ -44,7 +44,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
       const numAmount = parseFloat(amount);
       if (isNaN(numAmount) || numAmount <= 0) {
         newErrors.amount = 'Please enter a valid amount';
-      } else if (numAmount > user.balance) {
+      } else if (numAmount > (user?.balance || 0)) {
         newErrors.amount = 'Insufficient balance';
       }
     }
@@ -58,7 +58,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
     setIsSending(true);
     try {
       const numAmount = parseFloat(amount);
-      const result = sendMoney(user.id, recipient.trim(), numAmount, message);
+      const result = sendMoney(user?.id, recipient.trim(), numAmount, message);
       if (result.success) {
         Alert.alert('Success', `$${numAmount.toFixed(2)} sent successfully!`);
         setRecipient('');
@@ -85,6 +85,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
   };
 
   const getRecentRecipients = () => {
+    if (!user) return [];
     const sentTransactions = allTransactions.filter(t => t.senderId === user.id);
     const uniqueRecipients = [...new Set(sentTransactions.map(t => t.recipientId))];
     return uniqueRecipients.slice(0, 3).map(id => {
@@ -102,7 +103,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
           <Text style={styles.title}>Send Money</Text>
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Available Balance</Text>
-            <Text style={styles.balanceAmount}>${user.balance.toFixed(2)}</Text>
+            <Text style={styles.balanceAmount}>${(user?.balance || 0).toFixed(2)}</Text>
           </View>
         </View>
 

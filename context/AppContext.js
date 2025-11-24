@@ -25,15 +25,15 @@ export const AppProvider = ({ children }) => {
         const latestData = registeredUsers.find(u => u.id === account.id);
         return latestData || account;
       });
-      
+
       // Check if any account data changed
-      const hasChanges = updatedAccounts.some((acc, index) => 
+      const hasChanges = updatedAccounts.some((acc, index) =>
         JSON.stringify(acc) !== JSON.stringify(accounts[index])
       );
-      
+
       if (hasChanges) {
         setAccounts(updatedAccounts);
-        
+
         // Update current user if active
         if (activeAccountId) {
           const activeAccount = updatedAccounts.find(acc => acc.id === activeAccountId);
@@ -43,7 +43,7 @@ export const AppProvider = ({ children }) => {
         }
       }
     }
-  }, [registeredUsers]);
+  }, [registeredUsers, accounts, activeAccountId, user]);
 
   const loadData = async () => {
     try {
@@ -53,11 +53,11 @@ export const AppProvider = ({ children }) => {
       const usersData = await AsyncStorage.getItem('registeredUsers');
       const transactionsData = await AsyncStorage.getItem('allTransactions');
       const requestsData = await AsyncStorage.getItem('moneyRequests');
-      
+
       if (accountsData) {
         const parsedAccounts = JSON.parse(accountsData);
         setAccounts(parsedAccounts);
-        
+
         // Set active account
         if (activeAccountIdData) {
           const activeId = JSON.parse(activeAccountIdData);
@@ -78,7 +78,7 @@ export const AppProvider = ({ children }) => {
         setAccounts([parsedUser]);
         setActiveAccountId(parsedUser.id);
       }
-      
+
       if (usersData) setRegisteredUsers(JSON.parse(usersData));
       if (transactionsData) setAllTransactions(JSON.parse(transactionsData));
       if (requestsData) setMoneyRequests(JSON.parse(requestsData));
@@ -163,7 +163,7 @@ export const AppProvider = ({ children }) => {
       if (existingAccount) {
         return { success: false, message: 'Account is already added' };
       }
-      
+
       // Add to accounts array
       const newAccounts = [...accounts, foundUser];
       setAccounts(newAccounts);
@@ -186,7 +186,7 @@ export const AppProvider = ({ children }) => {
       const latestAccountData = registeredUsers.find(u => u.id === accountId);
       if (latestAccountData) {
         // Update the account in accounts array with latest data
-        const updatedAccounts = accounts.map(acc => 
+        const updatedAccounts = accounts.map(acc =>
           acc.id === accountId ? latestAccountData : acc
         );
         setAccounts(updatedAccounts);
@@ -211,7 +211,7 @@ export const AppProvider = ({ children }) => {
   const removeAccount = (accountId) => {
     const updatedAccounts = accounts.filter(acc => acc.id !== accountId);
     setAccounts(updatedAccounts);
-    
+
     if (activeAccountId === accountId) {
       // If removing active account, switch to another or logout
       if (updatedAccounts.length > 0) {
@@ -281,14 +281,10 @@ export const AppProvider = ({ children }) => {
     const recipient = findUserById(trimmedRecipientId);
 
     if (!recipient) {
-      console.log('Recipient not found:', trimmedRecipientId);
-      console.log('Available users:', registeredUsers.map(u => ({ id: u.id, name: u.name })));
       return { success: false, message: 'Recipient not found. Sending is only allowed using the recipient\'s unique ID (scan their QR).' };
     }
 
     if (sender.id === recipient.id) return { success: false, message: 'Cannot send money to yourself' };
-
-    console.log('Sending money from:', sender.name, 'balance:', sender.balance, 'to:', recipient.name, 'balance:', recipient.balance, 'amount:', amount);
 
     // Create transaction
     const transaction = {
@@ -312,8 +308,6 @@ export const AppProvider = ({ children }) => {
       return u;
     });
 
-    console.log('Updated users:', updatedUsers.map(u => ({ name: u.name, balance: u.balance })));
-
     setRegisteredUsers(updatedUsers);
     setAllTransactions([...allTransactions, transaction]);
 
@@ -321,7 +315,6 @@ export const AppProvider = ({ children }) => {
     if (user && (user.id === sender.id || user.id === recipient.id)) {
       const updatedUser = updatedUsers.find(u => u.id === user.id);
       setUser(updatedUser);
-      console.log('Updated current user balance:', updatedUser?.balance);
     }
 
     saveData();
@@ -340,8 +333,8 @@ export const AppProvider = ({ children }) => {
 
     // Find target by ID, email, or phone
     let target = findUserById(targetIdentifier) ||
-                 findUserByEmail(targetIdentifier) ||
-                 findUserByPhone(targetIdentifier);
+      findUserByEmail(targetIdentifier) ||
+      findUserByPhone(targetIdentifier);
 
     if (!target) return { success: false, message: 'Target user not found. You can only request money from registered users.' };
 
@@ -369,14 +362,8 @@ export const AppProvider = ({ children }) => {
       return { success: false, message: 'Request not found or already processed' };
     }
 
-    console.log('Accepting request:', request);
-    console.log('Target ID (sender):', request.targetId);
-    console.log('Requester ID (recipient):', request.requesterId);
-
     // Use sendMoney to transfer the funds
     const result = sendMoney(request.targetId, request.requesterId, request.amount, `Payment for money request: ${request.message}`);
-
-    console.log('Send money result:', result);
 
     if (result.success) {
       // Update request status

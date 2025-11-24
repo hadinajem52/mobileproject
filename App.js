@@ -72,8 +72,8 @@ function MainTabNavigator() {
         headerShown: false,
       }}
     >
-      <Tab.Screen 
-        name="Home" 
+      <Tab.Screen
+        name="Home"
         component={DashboardScreen}
         options={{
           tabBarLabel: 'Home',
@@ -82,8 +82,8 @@ function MainTabNavigator() {
           ),
         }}
       />
-      <Tab.Screen 
-        name="SendMoney" 
+      <Tab.Screen
+        name="SendMoney"
         component={SendMoneyScreen}
         options={{
           tabBarLabel: 'Send',
@@ -92,8 +92,8 @@ function MainTabNavigator() {
           ),
         }}
       />
-      <Tab.Screen 
-        name="ReceiveMoney" 
+      <Tab.Screen
+        name="ReceiveMoney"
         component={ReceiveMoneyScreen}
         options={{
           tabBarLabel: 'Receive',
@@ -102,8 +102,8 @@ function MainTabNavigator() {
           ),
         }}
       />
-      <Tab.Screen 
-        name="Account" 
+      <Tab.Screen
+        name="Account"
         component={AccountScreen}
         options={{
           tabBarLabel: 'Account',
@@ -129,8 +129,8 @@ function AppNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator 
-        screenOptions={{ 
+      <Stack.Navigator
+        screenOptions={{
           headerShown: false,
           cardStyleInterpolator: customCardStyleInterpolator,
           gestureEnabled: true,
@@ -139,36 +139,36 @@ function AppNavigator() {
       >
         {!user ? (
           <>
-            <Stack.Screen 
-              name="Home" 
-              component={HomeScreen} 
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
             />
-            <Stack.Screen 
-              name="Auth" 
-              component={AuthScreen} 
+            <Stack.Screen
+              name="Auth"
+              component={AuthScreen}
             />
           </>
         ) : (
           <>
-            <Stack.Screen 
-              name="MainTabs" 
-              component={MainTabNavigator} 
+            <Stack.Screen
+              name="MainTabs"
+              component={MainTabNavigator}
             />
-            <Stack.Screen 
-              name="ScanQRCode" 
-              component={ScanQRCodeScreen} 
+            <Stack.Screen
+              name="ScanQRCode"
+              component={ScanQRCodeScreen}
             />
-            <Stack.Screen 
-              name="TransactionHistory" 
-              component={TransactionHistoryScreen} 
+            <Stack.Screen
+              name="TransactionHistory"
+              component={TransactionHistoryScreen}
             />
-            <Stack.Screen 
-              name="Support" 
-              component={SupportScreen} 
+            <Stack.Screen
+              name="Support"
+              component={SupportScreen}
             />
-            <Stack.Screen 
-              name="Auth" 
-              component={AuthScreen} 
+            <Stack.Screen
+              name="AddAccount"
+              component={AuthScreen}
             />
           </>
         )}

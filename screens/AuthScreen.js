@@ -60,7 +60,7 @@ const AuthScreen = ({ navigation, route }) => {
     }
 
     const trimmedEmail = email.trim();
-    
+
     if (isAddingAccount) {
       // Adding account mode
       const result = addAccount(trimmedEmail, password);
@@ -114,8 +114,8 @@ const AuthScreen = ({ navigation, route }) => {
     Alert.alert('Success', 'Account created successfully! Please login.');
     setIsLogin(true);
     // Keep email and password so user can login immediately
-    // setEmail('');
-    // setPassword('');
+    setEmail('');
+    setPassword('');
     setName('');
     setPhone('');
     setSecurityQ(securityQuestions[0]);
@@ -204,12 +204,12 @@ const AuthScreen = ({ navigation, route }) => {
             <Ionicons name="chevron-back" size={24} color="#00ea00ff" />
           </TouchableOpacity>
         )}
-        
+
         <Text style={styles.title}>
-          {isAddingAccount 
-            ? 'Add Account' 
-            : isRecovering 
-              ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password') 
+          {isAddingAccount
+            ? 'Add Account'
+            : isRecovering
+              ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password')
               : isLogin ? 'Login' : 'Sign Up'}
         </Text>
 
@@ -219,94 +219,28 @@ const AuthScreen = ({ navigation, route }) => {
           </Text>
         )}
 
-      {!isRecovering && (
-        <>
-          {!isLogin && (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="Full Name"
-                placeholderTextColor="#999"
-                value={name}
-                onChangeText={setName}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Phone Number"
-                placeholderTextColor="#999"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-              />
-            </>
-          )}
+        {!isRecovering && (
+          <>
+            {!isLogin && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Full Name"
+                  placeholderTextColor="#999"
+                  value={name}
+                  onChangeText={setName}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Phone Number"
+                  placeholderTextColor="#999"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
+              </>
+            )}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email Address"
-            placeholderTextColor="#999"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-
-          {!isLogin && (
-            <>
-              <Text style={styles.label}>Security Question</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={securityQ}
-                  onValueChange={(itemValue) => setSecurityQ(itemValue)}
-                  style={styles.picker}
-                >
-                  {securityQuestions.map((q, index) => (
-                    <Picker.Item key={index} label={q} value={q} />
-                  ))}
-                </Picker>
-              </View>
-              <TextInput
-                style={styles.input}
-                placeholder="Answer"
-                placeholderTextColor="#999"
-                value={answer}
-                onChangeText={setAnswer}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Password (min 6 characters)"
-                placeholderTextColor="#999"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Confirm Password"
-                placeholderTextColor="#999"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry
-              />
-            </>
-          )}
-
-          {isLogin && (
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#999"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
-          )}
-        </>
-      )}
-
-      {isRecovering && (
-        <>
-          {recoveryStep === 0 && (
             <TextInput
               style={styles.input}
               placeholder="Email Address"
@@ -316,78 +250,144 @@ const AuthScreen = ({ navigation, route }) => {
               keyboardType="email-address"
               autoCapitalize="none"
             />
-          )}
-          {recoveryStep === 1 && recoveryUser && (
-            <>
-              <Text style={styles.label}>{recoveryUser.question}</Text>
+
+            {!isLogin && (
+              <>
+                <Text style={styles.label}>Security Question</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={securityQ}
+                    onValueChange={(itemValue) => setSecurityQ(itemValue)}
+                    style={styles.picker}
+                  >
+                    {securityQuestions.map((q, index) => (
+                      <Picker.Item key={index} label={q} value={q} />
+                    ))}
+                  </Picker>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Answer"
+                  placeholderTextColor="#999"
+                  value={answer}
+                  onChangeText={setAnswer}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password (min 6 characters)"
+                  placeholderTextColor="#999"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#999"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry
+                />
+              </>
+            )}
+
+            {isLogin && (
               <TextInput
                 style={styles.input}
-                placeholder="Your Answer"
+                placeholder="Password"
                 placeholderTextColor="#999"
-                value={recoveryAnswer}
-                onChangeText={setRecoveryAnswer}
-              />
-            </>
-          )}
-          {recoveryStep === 2 && (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="New Password (min 6 characters)"
-                placeholderTextColor="#999"
-                value={newPassword}
-                onChangeText={setNewPassword}
+                value={password}
+                onChangeText={setPassword}
                 secureTextEntry
               />
+            )}
+          </>
+        )}
+
+        {isRecovering && (
+          <>
+            {recoveryStep === 0 && (
               <TextInput
                 style={styles.input}
-                placeholder="Confirm New Password"
+                placeholder="Email Address"
                 placeholderTextColor="#999"
-                value={confirmNewPassword}
-                onChangeText={setConfirmNewPassword}
-                secureTextEntry
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
-            </>
-          )}
-        </>
-      )}
+            )}
+            {recoveryStep === 1 && recoveryUser && (
+              <>
+                <Text style={styles.label}>{recoveryUser.question}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Your Answer"
+                  placeholderTextColor="#999"
+                  value={recoveryAnswer}
+                  onChangeText={setRecoveryAnswer}
+                />
+              </>
+            )}
+            {recoveryStep === 2 && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="New Password (min 6 characters)"
+                  placeholderTextColor="#999"
+                  value={newPassword}
+                  onChangeText={setNewPassword}
+                  secureTextEntry
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm New Password"
+                  placeholderTextColor="#999"
+                  value={confirmNewPassword}
+                  onChangeText={setConfirmNewPassword}
+                  secureTextEntry
+                />
+              </>
+            )}
+          </>
+        )}
 
-      <TouchableOpacity style={styles.button} onPress={handleAuth}>
-        <Text style={styles.buttonText}>
-          {isRecovering ? (recoveryStep === 0 ? 'Next' : recoveryStep === 1 ? 'Verify Answer' : 'Update Password') : isLogin ? (isAddingAccount ? 'Add Account' : 'Login') : 'Sign Up'}
-        </Text>
-      </TouchableOpacity>
-
-      {!isRecovering && !isAddingAccount && (
-        <TouchableOpacity onPress={toggleMode}>
-          <Text style={styles.switchText}>
-            {isLogin ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
+        <TouchableOpacity style={styles.button} onPress={handleAuth}>
+          <Text style={styles.buttonText}>
+            {isRecovering ? (recoveryStep === 0 ? 'Next' : recoveryStep === 1 ? 'Verify Answer' : 'Update Password') : isLogin ? (isAddingAccount ? 'Add Account' : 'Login') : 'Sign Up'}
           </Text>
         </TouchableOpacity>
-      )}
 
-      {isLogin && !isRecovering && !isAddingAccount && (
-        <TouchableOpacity onPress={() => setIsRecovering(true)}>
-          <Text style={styles.recoverText}>Forgot Password?</Text>
-        </TouchableOpacity>
-      )}
+        {!isRecovering && !isAddingAccount && (
+          <TouchableOpacity onPress={toggleMode}>
+            <Text style={styles.switchText}>
+              {isLogin ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
+            </Text>
+          </TouchableOpacity>
+        )}
 
-      {isRecovering && (
-        <TouchableOpacity onPress={() => {
-          if (recoveryStep > 0) {
-            setRecoveryStep(recoveryStep - 1);
-          } else {
-            setIsRecovering(false);
-            setRecoveryStep(0);
-            setRecoveryUser(null);
-            setRecoveryAnswer('');
-            setNewPassword('');
-            setConfirmNewPassword('');
-          }
-        }}>
-          <Text style={styles.recoverText}>{recoveryStep === 0 ? 'Back to Login' : 'Back'}</Text>
-        </TouchableOpacity>
-      )}
+        {isLogin && !isRecovering && !isAddingAccount && (
+          <TouchableOpacity onPress={() => setIsRecovering(true)}>
+            <Text style={styles.recoverText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        )}
+
+        {isRecovering && (
+          <TouchableOpacity onPress={() => {
+            if (recoveryStep > 0) {
+              setRecoveryStep(recoveryStep - 1);
+            } else {
+              setIsRecovering(false);
+              setRecoveryStep(0);
+              setRecoveryUser(null);
+              setRecoveryAnswer('');
+              setNewPassword('');
+              setConfirmNewPassword('');
+            }
+          }}>
+            <Text style={styles.recoverText}>{recoveryStep === 0 ? 'Back to Login' : 'Back'}</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
