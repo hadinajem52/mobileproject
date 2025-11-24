@@ -91,6 +91,13 @@ const AuthScreen = ({ navigation, route }) => {
       return;
     }
 
+    // Phone number validation
+    const phoneRegex = /^\d{8,}$/;
+    if (!phoneRegex.test(phone)) {
+      Alert.alert('Error', 'Please enter a valid phone number (at least 8 digits)');
+      return;
+    }
+
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
