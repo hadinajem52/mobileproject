@@ -114,8 +114,6 @@ const AuthScreen = ({ navigation, route }) => {
     Alert.alert('Success', 'Account created successfully! Please login.');
     setIsLogin(true);
     // Keep email and password so user can login immediately
-    setEmail('');
-    setPassword('');
     setName('');
     setPhone('');
     setSecurityQ(securityQuestions[0]);
@@ -199,7 +197,7 @@ const AuthScreen = ({ navigation, route }) => {
         {(isAddingAccount || (!isLogin && !isRecovering)) && (
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => isAddingAccount ? navigation.goBack() : toggleMode()}
+            onPress={() => (isAddingAccount && isLogin) ? navigation.goBack() : toggleMode()}
           >
             <Ionicons name="chevron-back" size={24} color="#00ea00ff" />
           </TouchableOpacity>
@@ -207,7 +205,7 @@ const AuthScreen = ({ navigation, route }) => {
 
         <Text style={styles.title}>
           {isAddingAccount
-            ? 'Add Account'
+            ? (isLogin ? 'Add Account' : 'Create New Account')
             : isRecovering
               ? (recoveryStep === 0 ? 'Password Recovery - Enter Email' : recoveryStep === 1 ? 'Password Recovery - Answer Question' : 'Password Recovery - Set New Password')
               : isLogin ? 'Login' : 'Sign Up'}
@@ -358,7 +356,7 @@ const AuthScreen = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
 
-        {!isRecovering && !isAddingAccount && (
+        {!isRecovering && (
           <TouchableOpacity onPress={toggleMode}>
             <Text style={styles.switchText}>
               {isLogin ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
