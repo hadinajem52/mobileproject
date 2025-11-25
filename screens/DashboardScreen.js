@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../context/AppContext';
 import Card from '../components/Card';
+import SendMoneyModal from '../components/SendMoneyModal';
+import ReceiveMoneyModal from '../components/ReceiveMoneyModal';
 
 const DashboardScreen = ({ navigation }) => {
   const { user, getUserTransactions, findUserById, getPendingRequests, acceptMoneyRequest, rejectMoneyRequest } = useAppContext();
+  const [showSendModal, setShowSendModal] = useState(false);
+  const [showReceiveModal, setShowReceiveModal] = useState(false);
 
   const balance = user?.balance || 0;
   const allUserTransactions = getUserTransactions(user?.id || '');
@@ -73,11 +77,11 @@ const DashboardScreen = ({ navigation }) => {
         <Card>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsContainer}>
-            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('SendMoney')}>
+            <TouchableOpacity style={styles.actionButton} onPress={() => setShowSendModal(true)}>
               <Ionicons name="send" size={24} color="#000000ff" />
               <Text style={styles.actionButtonText}>Send</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('ReceiveMoney')}>
+            <TouchableOpacity style={styles.actionButton} onPress={() => setShowReceiveModal(true)}>
               <Ionicons name="download" size={24} color="#000000ff" />
               <Text style={styles.actionButtonText}>Receive</Text>
             </TouchableOpacity>
@@ -133,6 +137,9 @@ const DashboardScreen = ({ navigation }) => {
           />
         </Card>
       </View>
+
+      <SendMoneyModal visible={showSendModal} onClose={() => setShowSendModal(false)} navigation={navigation} />
+      <ReceiveMoneyModal visible={showReceiveModal} onClose={() => setShowReceiveModal(false)} />
     </SafeAreaView>
   );
 };
