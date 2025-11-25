@@ -22,6 +22,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
   const [scannedFromCamera, setScannedFromCamera] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     if (route?.params?.recipientFromQR) {
@@ -52,9 +53,12 @@ const SendMoneyScreen = ({ navigation, route }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSend = async () => {
+  const handleReview = () => {
     if (!validateForm()) return;
+    setShowConfirmation(true);
+  };
 
+  const handleConfirm = async () => {
     setIsSending(true);
     try {
       const numAmount = parseFloat(amount);
@@ -66,6 +70,7 @@ const SendMoneyScreen = ({ navigation, route }) => {
         setMessage('');
         setScannedFromCamera(false);
         setErrors({});
+        setShowConfirmation(false);
         navigation.goBack();
       } else {
         Alert.alert('Error', result.message);
@@ -99,129 +104,173 @@ const SendMoneyScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Send Money</Text>
-          <View style={styles.balanceContainer}>
-            <Text style={styles.balanceLabel}>Available Balance</Text>
-            <Text style={styles.balanceAmount}>${(user?.balance || 0).toFixed(2)}</Text>
+      {!showConfirmation ? (
+        <>
+          <View style={styles.header}>
+            <Text style={styles.title}>Send Money</Text>
+            <View style={styles.balanceContainer}>
+              <Text style={styles.balanceLabel}>Available Balance</Text>
+              <Text style={styles.balanceAmount}>${(user?.balance || 0).toFixed(2)}</Text>
+            </View>
           </View>
-        </View>
 
-        <Card style={styles.recipientCard}>
-          <Text style={styles.sectionTitle}>Recipient</Text>
-          <View style={styles.recipientInputRow}>
+          <Card style={styles.recipientCard}>
+            <Text style={styles.sectionTitle}>Recipient</Text>
+            <View style={styles.recipientInputRow}>
+              <View style={styles.inputContainer}>
+                <Ionicons name="person-outline" size={20} color="#cccccc" style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.input, errors.recipient && styles.inputError]}
+                  placeholder="Recipient ID (e.g., user_12345_abc)"
+                  placeholderTextColor="#999"
+                  value={recipient}
+                  onChangeText={(text) => {
+                    setRecipient(text);
+                    setErrors({ ...errors, recipient: undefined });
+                  }}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.scanButton}
+                onPress={() => navigation.navigate('ScanQRCode')}
+              >
+                <Ionicons name="qr-code-outline" size={20} color="#1e1f1e" />
+                <Text style={styles.scanButtonText}>Scan</Text>
+              </TouchableOpacity>
+            </View>
+            {errors.recipient && <Text style={styles.errorText}>{errors.recipient}</Text>}
+            {scannedFromCamera && (
+              <View style={styles.scannedBadge}>
+                <Ionicons name="checkmark-circle" size={16} color="#00ea00ff" />
+                <Text style={styles.scannedBadgeText}>Scanned via camera</Text>
+              </View>
+            )}
+          </Card>
+
+          {recentRecipients.length > 0 && (
+            <Card style={styles.recentCard}>
+              <Text style={styles.sectionTitle}>Recent Recipients</Text>
+              <View style={styles.recentList}>
+                {recentRecipients.map((recipient) => (
+                  <TouchableOpacity
+                    key={recipient.id}
+                    style={styles.recentItem}
+                    onPress={() => setRecipient(recipient.id)}
+                  >
+                    <Ionicons name="person-circle-outline" size={32} color="#00ea00ff" />
+                    <View style={styles.recentInfo}>
+                      <Text style={styles.recentId}>{recipient.id}</Text>
+                      <Text style={styles.recentAmount}>Last sent: ${recipient.lastAmount.toFixed(2)}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </Card>
+          )}
+
+          <Card style={styles.amountCard}>
+            <Text style={styles.sectionTitle}>Amount</Text>
             <View style={styles.inputContainer}>
-              <Ionicons name="person-outline" size={20} color="#cccccc" style={styles.inputIcon} />
+              <Ionicons name="cash-outline" size={20} color="#cccccc" style={styles.inputIcon} />
               <TextInput
-                style={[styles.input, errors.recipient && styles.inputError]}
-                placeholder="Recipient ID (e.g., user_12345_abc)"
+                style={[styles.input, errors.amount && styles.inputError]}
+                placeholder="0.00"
                 placeholderTextColor="#999"
-                value={recipient}
+                value={amount}
                 onChangeText={(text) => {
-                  setRecipient(text);
-                  setErrors({ ...errors, recipient: undefined });
+                  setAmount(text);
+                  setErrors({ ...errors, amount: undefined });
                 }}
+                keyboardType="decimal-pad"
               />
             </View>
-            <TouchableOpacity
-              style={styles.scanButton}
-              onPress={() => navigation.navigate('ScanQRCode')}
-            >
-              <Ionicons name="qr-code-outline" size={20} color="#1e1f1e" />
-              <Text style={styles.scanButtonText}>Scan</Text>
-            </TouchableOpacity>
-          </View>
-          {errors.recipient && <Text style={styles.errorText}>{errors.recipient}</Text>}
-          {scannedFromCamera && (
-            <View style={styles.scannedBadge}>
-              <Ionicons name="checkmark-circle" size={16} color="#00ea00ff" />
-              <Text style={styles.scannedBadgeText}>Scanned via camera</Text>
-            </View>
-          )}
-        </Card>
+            {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
 
-        {recentRecipients.length > 0 && (
-          <Card style={styles.recentCard}>
-            <Text style={styles.sectionTitle}>Recent Recipients</Text>
-            <View style={styles.recentList}>
-              {recentRecipients.map((recipient) => (
+            <View style={styles.quickAmounts}>
+              {quickAmounts.map((value) => (
                 <TouchableOpacity
-                  key={recipient.id}
-                  style={styles.recentItem}
-                  onPress={() => setRecipient(recipient.id)}
+                  key={value}
+                  style={styles.quickAmountButton}
+                  onPress={() => handleQuickAmount(value)}
                 >
-                  <Ionicons name="person-circle-outline" size={32} color="#00ea00ff" />
-                  <View style={styles.recentInfo}>
-                    <Text style={styles.recentId}>{recipient.id}</Text>
-                    <Text style={styles.recentAmount}>Last sent: ${recipient.lastAmount.toFixed(2)}</Text>
-                  </View>
+                  <Text style={styles.quickAmountText}>${value}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           </Card>
-        )}
 
-        <Card style={styles.amountCard}>
-          <Text style={styles.sectionTitle}>Amount</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="cash-outline" size={20} color="#cccccc" style={styles.inputIcon} />
-            <TextInput
-              style={[styles.input, errors.amount && styles.inputError]}
-              placeholder="0.00"
-              placeholderTextColor="#999"
-              value={amount}
-              onChangeText={(text) => {
-                setAmount(text);
-                setErrors({ ...errors, amount: undefined });
-              }}
-              keyboardType="decimal-pad"
-            />
+          <Card style={styles.messageCard}>
+            <Text style={styles.sectionTitle}>Message (Optional)</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="chatbubble-outline" size={20} color="#cccccc" style={styles.inputIcon} />
+              <TextInput
+                style={[styles.messageInput]}
+                placeholder="Add a note..."
+                placeholderTextColor="#999"
+                value={message}
+                onChangeText={setMessage}
+                multiline
+                numberOfLines={3}
+              />
+            </View>
+          </Card>
+
+          <TouchableOpacity
+            style={[styles.sendButton, isSending && styles.sendButtonDisabled]}
+            onPress={handleReview}
+            disabled={isSending}
+          >
+            <Ionicons name="eye-outline" size={20} color="#1e1f1e" />
+            <Text style={styles.sendButtonText}>Review Transfer</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => setShowConfirmation(false)} style={styles.backButton}>
+              <Ionicons name="arrow-back" size={24} color="#00ea00ff" />
+            </TouchableOpacity>
+            <Text style={styles.title}>Confirm Transfer</Text>
           </View>
-          {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
 
-          <View style={styles.quickAmounts}>
-            {quickAmounts.map((value) => (
-              <TouchableOpacity
-                key={value}
-                style={styles.quickAmountButton}
-                onPress={() => handleQuickAmount(value)}
-              >
-                <Text style={styles.quickAmountText}>${value}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </Card>
+          <Card style={styles.summaryCard}>
+            <Text style={styles.sectionTitle}>Transfer Summary</Text>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Recipient:</Text>
+              <Text style={styles.summaryValue}>{recipient}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Amount:</Text>
+              <Text style={styles.summaryValue}>${parseFloat(amount).toFixed(2)}</Text>
+            </View>
+            {message ? (
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Message:</Text>
+                <Text style={styles.summaryValue}>{message}</Text>
+              </View>
+            ) : null}
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>New Balance:</Text>
+              <Text style={styles.summaryValue}>${((user?.balance || 0) - parseFloat(amount)).toFixed(2)}</Text>
+            </View>
+          </Card>
 
-        <Card style={styles.messageCard}>
-          <Text style={styles.sectionTitle}>Message (Optional)</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="chatbubble-outline" size={20} color="#cccccc" style={styles.inputIcon} />
-            <TextInput
-              style={[styles.messageInput]}
-              placeholder="Add a note..."
-              placeholderTextColor="#999"
-              value={message}
-              onChangeText={setMessage}
-              multiline
-              numberOfLines={3}
-            />
-          </View>
-        </Card>
-
-        <TouchableOpacity
-          style={[styles.sendButton, isSending && styles.sendButtonDisabled]}
-          onPress={handleSend}
-          disabled={isSending}
-        >
-          {isSending ? (
-            <ActivityIndicator color="#1e1f1e" />
-          ) : (
-            <>
-              <Ionicons name="send-outline" size={20} color="#1e1f1e" />
-              <Text style={styles.sendButtonText}>Send Money</Text>
-            </>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.confirmButton, isSending && styles.sendButtonDisabled]}
+            onPress={handleConfirm}
+            disabled={isSending}
+          >
+            {isSending ? (
+              <ActivityIndicator color="#1e1f1e" />
+            ) : (
+              <>
+                <Ionicons name="checkmark-outline" size={20} color="#1e1f1e" />
+                <Text style={styles.sendButtonText}>Confirm & Send</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </>
+      )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -425,6 +474,41 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'StackSansHeadline-Medium',
     marginLeft: 8,
+  },
+  backButton: {
+    marginRight: 12,
+  },
+  summaryCard: {
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  summaryLabel: {
+    fontSize: 16,
+    color: '#cccccc',
+    fontFamily: 'StackSansHeadline-Regular',
+  },
+  summaryValue: {
+    fontSize: 16,
+    color: '#ffffff',
+    fontFamily: 'StackSansHeadline-Medium',
+  },
+  confirmButton: {
+    backgroundColor: '#00ea00ff',
+    marginHorizontal: 20,
+    marginTop: 24,
+    marginBottom: 32,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 

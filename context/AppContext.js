@@ -292,7 +292,7 @@ export const AppProvider = ({ children }) => {
       senderId: sender.id,
       recipientId: recipient.id,
       amount: amount,
-      message: message,
+      message: encrypt(message),
       date: new Date().toISOString(),
       status: 'completed',
     };
@@ -324,7 +324,10 @@ export const AppProvider = ({ children }) => {
   const getUserTransactions = (userId) => {
     return allTransactions.filter(txn =>
       txn.senderId === userId || txn.recipientId === userId
-    ).sort((a, b) => new Date(b.date) - new Date(a.date));
+    ).map(txn => ({
+      ...txn,
+      message: decrypt(txn.message)
+    })).sort((a, b) => new Date(b.date) - new Date(a.date));
   };
 
   const requestMoney = (requesterId, targetIdentifier, amount, message = '') => {
@@ -346,7 +349,7 @@ export const AppProvider = ({ children }) => {
       requesterId: requester.id,
       targetId: target.id,
       amount: amount,
-      message: message,
+      message: encrypt(message),
       date: new Date().toISOString(),
       status: 'pending',
     };
@@ -363,7 +366,7 @@ export const AppProvider = ({ children }) => {
     }
 
     // Use sendMoney to transfer the funds
-    const result = sendMoney(request.targetId, request.requesterId, request.amount, `Payment for money request: ${request.message}`);
+    const result = sendMoney(request.targetId, request.requesterId, request.amount, `Payment for money request: ${decrypt(request.message)}`);
 
     if (result.success) {
       // Update request status
@@ -387,7 +390,10 @@ export const AppProvider = ({ children }) => {
   };
 
   const getPendingRequests = (userId) => {
-    return moneyRequests.filter(r => r.targetId === userId && r.status === 'pending');
+    return moneyRequests.filter(r => r.targetId === userId && r.status === 'pending').map(r => ({
+      ...r,
+      message: decrypt(r.message)
+    }));
   };
 
   const logout = () => {
@@ -401,6 +407,29 @@ export const AppProvider = ({ children }) => {
 
   const logoutAccount = (accountId) => {
     removeAccount(accountId);
+  };
+
+  // Basic encryption functions for sensitive data
+  const ENCRYPTION_KEY = 'mobileProjectSecretKey123'; // Simple encryption key
+
+  const encrypt = (text) => {
+    if (!text || typeof text !== 'string') return text;
+    return btoa(text.split('').map((char, i) => 
+      String.fromCharCode(char.charCodeAt(0) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length))
+    ).join(''));
+  };
+
+  const decrypt = (encryptedText) => {
+    if (!encryptedText || typeof encryptedText !== 'string') return encryptedText;
+    try {
+      const decoded = atob(encryptedText);
+      return decoded.split('').map((char, i) => 
+        String.fromCharCode(char.charCodeAt(0) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length))
+      ).join('');
+    } catch (error) {
+      // If decryption fails, return as is (might not be encrypted)
+      return encryptedText;
+    }
   };
 
   return (
@@ -431,6 +460,8 @@ export const AppProvider = ({ children }) => {
       getPendingRequests,
       getUserTransactions,
       logout,
+      encrypt,
+      decrypt,
     }}>
       {children}
     </AppContext.Provider>
