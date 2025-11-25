@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,6 +29,7 @@ const TransactionHistoryScreen = ({ navigation }) => {
       sender: !isSent ? otherUser?.name : null,
       date: new Date(txn.date),
       status: txn.status,
+      message: txn.message,
     };
   });
 
@@ -65,9 +67,16 @@ const TransactionHistoryScreen = ({ navigation }) => {
         </Text>
         <Text style={styles.transactionDate}>{item.date.toLocaleDateString()}</Text>
       </View>
-      <Text style={[styles.status, item.status === 'Completed' ? styles.completed : styles.pending]}>
-        {item.status}
-      </Text>
+      <View style={styles.rightSection}>
+        {item.message ? (
+          <TouchableOpacity onPress={() => Alert.alert('Transaction Message', item.message)}>
+            <Ionicons name="chatbubble" size={24} color="#00ea00ff" style={styles.messageIcon} />
+          </TouchableOpacity>
+        ) : null}
+        <Text style={[styles.status, item.status === 'Completed' ? styles.completed : styles.pending]}>
+          {item.status}
+        </Text>
+      </View>
     </View>
   );
 
@@ -221,6 +230,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666666',
     marginTop: 5,
+  },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  messageIcon: {
+    marginRight: 10,
   },
   status: {
     fontSize: 14,
